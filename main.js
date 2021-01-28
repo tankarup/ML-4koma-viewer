@@ -137,7 +137,7 @@ function update_tweets(stories){
         if (i > stories.length -1) break;
         html += `
         <div class="story">
-            <p><a target="_blank" href="${stories[i].url}" style="font-size:1.3em; font-weight: bold;">${stories[i].title}</a><br>${stories[i].idols.join(', ')}</p>
+            <p><a target="_blank" href="${stories[i].url}"><span style="font-size:1.3em; font-weight: bold;">${stories[i].title}</span> <img src="open.png" style="width:1em; height:1em;"></a><br>${stories[i].idols.join(', ')}</p>
             <blockquote class="twitter-tweet">
                 <a href="${stories[i].url}">#ミリシタ4コマ 公式ツイート</a>
             </blockquote>
