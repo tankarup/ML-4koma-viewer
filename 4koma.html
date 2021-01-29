@@ -18,20 +18,29 @@
         .story {
             margin: 5px;
         }
+        #navigation {
+            //display: inline-block;
+            //font-weight:bold;
+        }
+
+        #idols1, #idols2 , option{
+            max-width: 80px;
+        }
     </style>
 </head>
 
 <body>
     <nav class="navbar navbar-primary bg-primary text-light">
         <h1 class="h3">ミリシタ4コマビューワ</h1>
-        <div class="dropdown">
+        <div id="navigation"><button type="button" id="prev_button" class="btn btn-primary">＜</button><span id="pages">**/**</span><button type="button" id="next_button" class="btn btn-primary">＞</button></div>
+        <div >
             <select id="idols1">
                 <option value="">登場人物1</option>
             </select>
             <select id="idols2">
                 <option value="">登場人物2</option>
             </select>
-            <button type="button" id="prev_button" class="btn btn-primary">＜</button><span id="pages">**/**</span><button type="button" id="next_button" class="btn btn-primary">＞</button>
+        </div>
 
     </nav>
 
