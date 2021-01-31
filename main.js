@@ -1,6 +1,7 @@
 //https://www.koreyome.com/make-spreadsheet-to-json-at-google-apps-script/
 
-let data = [];
+let data = []; //全データ
+let current_list = []; //現在表示中のデータ
 let idol_list = [];
 let drawer_list = [];
 let idol1 = '';
@@ -50,6 +51,7 @@ function getJsonp_GAS() {
                 );
             }
             init_menu();
+            current_list = data;
             update_tweets(data);
 
         }
@@ -107,31 +109,45 @@ document.getElementById('idols1').addEventListener('change', function(){
     idol1 = this.value;
     console.log(idol1);
     page = 0;
-    filter_by_idols();
+    update_list();
 });
 document.getElementById('idols2').addEventListener('change', function(){
     idol2 = this.value;
     console.log(idol2);
     page = 0;
-    filter_by_idols();
+    update_list();
 });
 document.getElementById('drawers').addEventListener('change', function(){
     drawer = this.value;
     console.log(drawer);
     page = 0;
-    filter_by_idols();
+    update_list();
 });
 
 document.getElementById('prev_button').addEventListener('click', function(){
 
     page = page - 1;
-    const filtered = filter_by_idols();
+    update_tweets(current_list);
 });
 document.getElementById('next_button').addEventListener('click', function(){
-
     page = page + 1;
-    const filtered = filter_by_idols();
+    update_tweets(current_list);
 });
+document.getElementById('first_button').addEventListener('click', function(){
+
+    page = 0;
+    update_tweets(current_list);
+});
+document.getElementById('last_button').addEventListener('click', function(){
+
+    page = Math.floor((current_list.length - 1) / number_per_page);
+    update_tweets(current_list);
+});
+
+function update_list(){
+    current_list = filter_by_idols();
+    update_tweets(current_list);
+}
 
 function filter_by_idols(){
     let stories = [];
@@ -140,7 +156,7 @@ function filter_by_idols(){
             stories.push(story);
         }
     }
-    update_tweets(stories);
+
 
     return stories;
 }
@@ -150,13 +166,17 @@ function update_tweets(stories){
 
     if (page < 1){
         $('#prev_button').prop('disabled', true);
+        $('#first_button').prop('disabled', true);
     } else {
         $('#prev_button').prop('disabled', false);
+        $('#first_button').prop('disabled', false);
     }
     if ((page+1)*number_per_page > stories.length-1){
         $('#next_button').prop('disabled', true);
+        $('#last_button').prop('disabled', true);
     } else {
         $('#next_button').prop('disabled', false);
+        $('#last_button').prop('disabled', false);
     }
     $('#pages').text(`${init+1}-${Math.min(init+number_per_page, stories.length)}/${stories.length}`);
 
