@@ -62,7 +62,7 @@ function get_person_list(key){
         persons = persons.concat(data[i][key]);
     }
     //重複を削除
-    person_list = persons.filter(function (x, i, self) {
+    let person_list = persons.filter(function (x, i, self) {
         return self.indexOf(x) === i;
     });
     //空白除去
