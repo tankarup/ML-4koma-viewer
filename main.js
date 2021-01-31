@@ -2,8 +2,10 @@
 
 let data = [];
 let idol_list = [];
+let drawer_list = [];
 let idol1 = '';
 let idol2 = '';
+let drawer = '';
 let page = 0;
 let number_per_page = 5;
 
@@ -42,6 +44,7 @@ function getJsonp_GAS() {
                     {
                         title: story['タイトル'],
                         idols: idol,
+                        drawers: [story['作画']], //idolsと処理を同じにするために配列として保持。
                         url: story['URL'],
                     }
                 );
@@ -53,21 +56,33 @@ function getJsonp_GAS() {
     });
 }
 
-function init_menu(){
-    let idols = [];
+function get_person_list(key){
+    let persons = [];
     for (let i = 0; i< data.length; i++){
-        idols = idols.concat(data[i].idols);
+        persons = persons.concat(data[i][key]);
     }
-    idol_list = idols.filter(function (x, i, self) {
+    //重複を削除
+    person_list = persons.filter(function (x, i, self) {
         return self.indexOf(x) === i;
     });
-    idol_list.sort(function(a,b){
+    //空白除去
+    person_list = person_list.filter(n => n);
+
+    //ソート
+    person_list.sort(function(a,b){
         if( a < b ) return -1;
         if( a > b ) return 1;
         return 0;
     });
+    return person_list;
+}
 
+function init_menu(){
 
+    idol_list = get_person_list('idols');
+    drawer_list = get_person_list('drawers');
+
+    //アイドルフィルターメニュー作成
     let options_html = '';
     for (let idol of idol_list){
         options_html += `<option value="${idol}">${idol}</option>`;
@@ -75,6 +90,14 @@ function init_menu(){
 
     document.getElementById('idols1').innerHTML = '<option value="">登場人物1</option>' + options_html;
     document.getElementById('idols2').innerHTML = '<option value="">登場人物2</option>' + options_html;
+
+    //作画担当フィルターメニュー作成
+    let drawers_html = '';
+    for (let drawer of drawer_list){
+        drawers_html += `<option value="${drawer}">${drawer}</option>`;
+    }
+
+    document.getElementById('drawers').innerHTML = '<option value="">作画</option>' + drawers_html;
 
 }
 
@@ -89,6 +112,12 @@ document.getElementById('idols1').addEventListener('change', function(){
 document.getElementById('idols2').addEventListener('change', function(){
     idol2 = this.value;
     console.log(idol2);
+    page = 0;
+    filter_by_idols();
+});
+document.getElementById('drawers').addEventListener('change', function(){
+    drawer = this.value;
+    console.log(drawer);
     page = 0;
     filter_by_idols();
 });
@@ -107,7 +136,7 @@ document.getElementById('next_button').addEventListener('click', function(){
 function filter_by_idols(){
     let stories = [];
     for (let story of data){
-        if ((story.idols.indexOf(idol1) >= 0 || idol1 == '') && (story.idols.indexOf(idol2) >= 0 || idol2 == '')){
+        if ((story.idols.indexOf(idol1) >= 0 || idol1 == '') && (story.idols.indexOf(idol2) >= 0 || idol2 == '') && (story.drawers.indexOf(drawer) >= 0 || drawer == '')){
             stories.push(story);
         }
     }
@@ -132,11 +161,12 @@ function update_tweets(stories){
     $('#pages').text(`${init+1}-${Math.min(init+number_per_page, stories.length)}/${stories.length}`);
 
     let html = '';
+    //html += '<div class="container"><div class="row">';
 
     for (var i = init; i < init + number_per_page; i++) {
         if (i > stories.length -1) break;
         html += `
-        <div class="story" style="width:300px;">
+        <div class="story -col-xl-3 -col-md-4 -col-sm-12 ">
             <p><a target="_blank" href="${stories[i].url}"><span style="font-size:1.3em; font-weight: bold;">${stories[i].title}</span> <img src="open.png" style="width:1em; height:1em;"></a><br>${stories[i].idols.join(', ')}</p>
             <blockquote class="twitter-tweet">
                 <a href="${stories[i].url}">#ミリシタ4コマ 公式ツイート</a>
@@ -144,6 +174,7 @@ function update_tweets(stories){
         </div>`;
 
     }
+    //html += `</div></div>`;
 
     document.getElementById('whole').innerHTML = html;
     twttr.widgets.load();
