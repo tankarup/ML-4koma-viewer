@@ -51,8 +51,9 @@ function getJsonp_GAS() {
                 );
             }
             init_menu();
+            load_url_params();
             current_list = data;
-            update_tweets(data);
+            update_list();
 
         }
     });
@@ -103,7 +104,26 @@ function init_menu(){
 
 }
 
+function load_url_params(){
+    const idol1_name = getParam('idol1');
+    const idol2_name = getParam('idol2');
 
+    idol1 = idol1_name ? idol1_name : '';
+    idol2 = idol2_name ? idol2_name : '';
+
+    document.getElementById('idols1').value = idol1;
+    document.getElementById('idols2').value = idol2;
+}
+
+function getParam(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
 
 document.getElementById('idols1').addEventListener('change', function(){
     idol1 = this.value;
@@ -144,6 +164,11 @@ document.getElementById('last_button').addEventListener('click', function(){
     update_tweets(current_list);
 });
 
+document.getElementById('leading_actor').addEventListener('change', function(){
+
+    update_list();
+});
+
 function update_list(){
     current_list = filter_by_idols();
     update_tweets(current_list);
@@ -151,11 +176,20 @@ function update_list(){
 
 function filter_by_idols(){
     let stories = [];
-    for (let story of data){
-        if ((story.idols.indexOf(idol1) >= 0 || idol1 == '') && (story.idols.indexOf(idol2) >= 0 || idol2 == '') && (story.drawers.indexOf(drawer) >= 0 || drawer == '')){
-            stories.push(story);
+    if (document.getElementById("leading_actor").checked){
+        for (let story of data){
+            if ((story.idols.indexOf(idol1) == 0 || idol1 == '') && (story.idols.indexOf(idol2) == 0 || idol2 == '') && (story.drawers.indexOf(drawer) >= 0 || drawer == '')){
+                stories.push(story);
+            }
+        }
+    } else {
+        for (let story of data){
+            if ((story.idols.indexOf(idol1) >= 0 || idol1 == '') && (story.idols.indexOf(idol2) >= 0 || idol2 == '') && (story.drawers.indexOf(drawer) >= 0 || drawer == '')){
+                stories.push(story);
+            }
         }
     }
+
 
 
     return stories;
