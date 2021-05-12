@@ -16,7 +16,7 @@ window.onload = function () {
     // 【main-script】 を実行
     getJsonp_GAS();
 
-
+    if (screen.width > 700) number_per_page = 6;
     //PCの場合は表示数を10に増やす
     if (screen.width > 1000) number_per_page = 12;
 
