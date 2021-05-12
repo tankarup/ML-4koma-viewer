@@ -154,10 +154,12 @@ document.getElementById('drawers').addEventListener('change', function(){
 document.getElementById('prev_button').addEventListener('click', function(){
 
     viewing_koma = viewing_koma - number_per_page;
+    if (viewing_koma < 0) viewing_koma = 0;
     update_tweets(current_list);
 });
 document.getElementById('next_button').addEventListener('click', function(){
     viewing_koma = viewing_koma + number_per_page;
+    if (viewing_koma + number_per_page > current_list.length-1) viewing_koma = current_list.length - number_per_page;
     update_tweets(current_list);
 });
 document.getElementById('first_button').addEventListener('click', function(){
