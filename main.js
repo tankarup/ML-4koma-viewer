@@ -8,12 +8,16 @@ let idol1 = '';
 let idol2 = '';
 let drawer = '';
 let page = 0;
+let viewing_koma = 0;
 let number_per_page = 5;
 
 // ページ読み込み後の処理
 window.onload = function () {
     // 【main-script】 を実行
     getJsonp_GAS();
+
+    //PCの場合は表示数を10に増やす
+    if (screen.width > 1000) number_per_page = 10;
 }
 
 // 【main-script】 スプレッドシート内の記述をjsonデータとして読み込み html 内へ入れ込む
@@ -128,39 +132,39 @@ function getParam(name, url) {
 document.getElementById('idols1').addEventListener('change', function(){
     idol1 = this.value;
     console.log(idol1);
-    page = 0;
+    viewing_koma = 0;
     update_list();
 });
 document.getElementById('idols2').addEventListener('change', function(){
     idol2 = this.value;
     console.log(idol2);
-    page = 0;
+    viewing_koma = 0;
     update_list();
 });
 document.getElementById('drawers').addEventListener('change', function(){
     drawer = this.value;
     console.log(drawer);
-    page = 0;
+    viewing_koma = 0;
     update_list();
 });
 
 document.getElementById('prev_button').addEventListener('click', function(){
 
-    page = page - 1;
+    viewing_koma = viewing_koma - number_per_page;
     update_tweets(current_list);
 });
 document.getElementById('next_button').addEventListener('click', function(){
-    page = page + 1;
+    viewing_koma = viewing_koma + number_per_page;
     update_tweets(current_list);
 });
 document.getElementById('first_button').addEventListener('click', function(){
 
-    page = 0;
+    viewing_koma = 0;
     update_tweets(current_list);
 });
 document.getElementById('last_button').addEventListener('click', function(){
 
-    page = Math.floor((current_list.length - 1) / number_per_page);
+    viewing_koma = current_list.length - number_per_page;
     update_tweets(current_list);
 });
 
@@ -198,26 +202,26 @@ function filter_by_idols(){
 function update_tweets(stories){
     const init = page*number_per_page;
 
-    if (page < 1){
+    if (viewing_koma < 1){
         $('#prev_button').prop('disabled', true);
         $('#first_button').prop('disabled', true);
     } else {
         $('#prev_button').prop('disabled', false);
         $('#first_button').prop('disabled', false);
     }
-    if ((page+1)*number_per_page > stories.length-1){
+    if (viewing_koma > stories.length-number_per_page-1){
         $('#next_button').prop('disabled', true);
         $('#last_button').prop('disabled', true);
     } else {
         $('#next_button').prop('disabled', false);
         $('#last_button').prop('disabled', false);
     }
-    $('#pages').text(`${init+1}-${Math.min(init+number_per_page, stories.length)}/${stories.length}`);
+    $('#pages').text(`${viewing_koma+1}-${Math.min(viewing_koma+number_per_page, stories.length)}/${stories.length}`);
 
     let html = '';
     //html += '<div class="container"><div class="row">';
 
-    for (var i = init; i < init + number_per_page; i++) {
+    for (var i = viewing_koma; i < viewing_koma + number_per_page; i++) {
         if (i > stories.length -1) break;
         html += `
         <div class="story -col-xl-3 -col-md-4 -col-sm-12 ">
