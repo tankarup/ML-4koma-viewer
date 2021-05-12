@@ -9,15 +9,18 @@ let idol2 = '';
 let drawer = '';
 let page = 0;
 let viewing_koma = 0;
-let number_per_page = 5;
+let number_per_page = 4;
 
 // ページ読み込み後の処理
 window.onload = function () {
     // 【main-script】 を実行
     getJsonp_GAS();
 
+
     //PCの場合は表示数を10に増やす
-    if (screen.width > 1000) number_per_page = 10;
+    if (screen.width > 1000) number_per_page = 12;
+
+
 }
 
 // 【main-script】 スプレッドシート内の記述をjsonデータとして読み込み html 内へ入れ込む
