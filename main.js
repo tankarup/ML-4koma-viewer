@@ -22,7 +22,6 @@ window.onload = function () {
 
 
 }
-
 // 【main-script】 スプレッドシート内の記述をjsonデータとして読み込み html 内へ入れ込む
 function getJsonp_GAS() {
     $.ajax({
@@ -61,6 +60,7 @@ function getJsonp_GAS() {
             load_url_params();
             current_list = data;
             update_list();
+			document.getElementById('loading').style.display="none";
 
         }
     });
