@@ -20,6 +20,8 @@ window.onload = function () {
     if (screen.width > 700){
 		number_per_page = 6;
 		number_menu_columns = 6;
+
+		document.getElementById("main_navbar").classList.add("sticky-top")
 	}
     //PCの場合は表示数を10に増やす
     if (screen.width > 1000){
