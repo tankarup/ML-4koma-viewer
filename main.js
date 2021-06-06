@@ -10,7 +10,8 @@ let drawer = '';
 let page = 0;
 let viewing_koma = 0;
 let number_per_page = 4;
-let number_menu_columns = 3;
+let number_menu_columns = 4;
+let icon_size = 32;
 
 // ページ読み込み後の処理
 window.onload = function () {
@@ -18,6 +19,7 @@ window.onload = function () {
     getJsonp_GAS();
 
     if (screen.width > 700){
+		icon_size = 64;
 		number_per_page = 6;
 		number_menu_columns = 6;
 
@@ -112,7 +114,7 @@ function init_idol_menu(num){
 						src="icons/${items[0]}.jpg"
 						alt="${items[1]}"
 						title="${items[1]}"
-						style="width:64px;border: medium solid #fff;"
+						style="width:${icon_size}px;border: medium solid #fff;"
 						onMouseOver="this.style.borderColor='${items[2]}'"
 						onMouseOut="this.style.borderColor='#fff'"
 						onClick="set_idol${num}('${items[1]}');"
