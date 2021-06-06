@@ -87,31 +87,59 @@ function get_person_list(key){
     return person_list;
 }
 
-function get_idol_list(){
-	let idol_names_from_data = get_person_list('idols');
-	let idol_list = idol_name_standard_list;
 
-	for (let name of idol_names_from_data){
-		if (idol_list.indexOf(name) == -1) idol_list.push(name);
+function init_idol_menu(num){
+	let appended_idol_list = [];
+	let html = '';
+	html += `<ul class="dropdown_nav" style="column-count: 8;column-gap: 5px;">`;
+	const lines = idol_icons.split('\n');
+	for (let line of lines){
+		if (line.length < 1) continue;
+		const items = line.split('\t');
+		html += `
+			<li style="margin-bottom: 5px;">
+
+					<img
+						src="icons/${items[0]}.jpg"
+						alt="${items[1]}"
+						title="${items[1]}"
+						style="width:64px;border: medium solid #fff;"
+						onMouseOver="this.style.borderColor='${items[2]}'"
+						onMouseOut="this.style.borderColor='#fff'"
+						onClick="set_idol${num}('${items[1]}');"
+					>
+
+			</li>`;
+		appended_idol_list.push(items[1]);
 	}
-	return idol_list;
+	//アイコンがないメンバーを追加
+	const idol_names_from_data = get_person_list('idols');
+	for (let name of idol_names_from_data){
+		if (appended_idol_list.indexOf(name) == -1){
+			html += `
+			<li style="margin-bottom: 5px;">
+				<button type="button" class="btn btn-outline-secondary btn-sm" onClick="set_idol${num}('${name}');">${name}</button>
+			</li>`;
+		}
+	}
+	//選択解除ボタン
+	html += `
+		<li>
+			<button type="button" class="btn btn-warning" onClick="set_idol${num}('');">Clear</button>
+		</li>`;
+	document.getElementById(`idol${num}_menu`).innerHTML = html;
+
 }
 
 function init_menu(){
 
-    idol_list = get_idol_list();
-    drawer_list = get_person_list('drawers');
+	init_idol_menu(1);
+	init_idol_menu(2);
 
-    //アイドルフィルターメニュー作成
-    let options_html = '';
-    for (let idol of idol_list){
-        options_html += `<option value="${idol}">${idol}</option>`;
-    }
 
-    document.getElementById('idols1').innerHTML = '<option value="">登場人物1</option>' + options_html;
-    document.getElementById('idols2').innerHTML = '<option value="">登場人物2</option>' + options_html;
 
     //作画担当フィルターメニュー作成
+	drawer_list = get_person_list('drawers');
     let drawers_html = '';
     for (let drawer of drawer_list){
         drawers_html += `<option value="${drawer}">${drawer}</option>`;
@@ -127,9 +155,10 @@ function load_url_params(){
 
     idol1 = idol1_name ? idol1_name : '';
     idol2 = idol2_name ? idol2_name : '';
-
+	/*
     document.getElementById('idols1').value = idol1;
     document.getElementById('idols2').value = idol2;
+	*/
 }
 
 function getParam(name, url) {
@@ -141,7 +170,19 @@ function getParam(name, url) {
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
-
+function set_idol1(name){
+	document.getElementById('idol1_name').innerText = (name != '') ? name : 'アイドル1▼';
+	idol1 = name;
+	viewing_koma = 0;
+	update_list();
+}
+function set_idol2(name){
+	document.getElementById('idol2_name').innerText = (name != '') ? name : 'アイドル2▼';
+	idol2 = name;
+	viewing_koma = 0;
+	update_list();
+}
+/*
 document.getElementById('idols1').addEventListener('change', function(){
     idol1 = this.value;
     console.log(idol1);
@@ -154,6 +195,7 @@ document.getElementById('idols2').addEventListener('change', function(){
     viewing_koma = 0;
     update_list();
 });
+*/
 document.getElementById('drawers').addEventListener('change', function(){
     drawer = this.value;
     console.log(drawer);
@@ -340,3 +382,59 @@ for (let idol_line of idol_lines){
     }
 
 }
+
+
+const idol_icons = `haruka	春香	#e22b30
+chihaya	千早	#2743d2
+miki	美希	#b4e04b
+yukiho	雪歩	#d3dde9
+yayoi	やよい	#f39939
+makoto	真	#515558
+iori	伊織	#fd99e1
+takane	貴音	#a6126a
+ritsuko	律子	#01a860
+azusa	あずさ	#9238be
+ami	亜美	#ffe43f
+mami	真美	#ffe43e
+hibiki	響	#01adb9
+mirai	未来	#ea5b76
+shizuka	静香	#6495cf
+tsubasa	翼	#fed552
+kotoha	琴葉	#92cfbb
+elena	エレナ	#9bce92
+minako	美奈子	#58a6dc
+megumi	恵美	#454341
+matsuri	まつり	#5abfb7
+serika	星梨花	#ed90ba
+akane	茜	#eb613f
+anna	杏奈	#7e6ca8
+roco	ロコ	#fff03c
+yuriko	百合子	#c7b83c
+sayoko	紗代子	#7f6575
+arisa	亜利沙	#b54461
+umi	海美	#e9739b
+iku	育	#f7e78e
+tomoka	朋花	#bee3e3
+emily	エミリー	#554171
+shiho	志保	#afa690
+ayumu	歩	#e25a9b
+hinata	ひなた	#d1342c
+kana	可奈	#f5ad3b
+nao	奈緒	#788bc5
+chizuru	千鶴	#f19557
+konomi	このみ	#f1becb
+tamaki	環	#ee762e
+fuka	風花	#7278a8
+miya	美也	#d7a96b
+noriko	のり子	#eceb70
+mizuki	瑞希	#99b7dc
+karen	可憐	#b63b40
+rio	莉緒	#f19591
+subaru	昴	#aeb49c
+reika	麗花	#6bb6b0
+momoko	桃子	#efb864
+julia	ジュリア	#d7385f
+tsumugi	紬	#ebe1ff
+kaori	歌織	#274079
+
+`;

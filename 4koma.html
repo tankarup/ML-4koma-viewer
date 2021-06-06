@@ -6,8 +6,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>ミリシタ4コマ　検索  ビューア</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
-    integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/gh/geedmo/yamm@4.0.0/dist/yamm.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://tankarup.github.io/million.css">
     <style>
         #whole {
@@ -76,11 +76,44 @@
 	transform: scale(1);
   }
 }
+ul.dropdown_nav,
+ul.dropdown_nav li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+ 
+.dropdown_container{
+    display: inline-block;
+    position: relative;
+
+
+}
+ 
+.dropdown_container > .popup{
+    position: absolute;
+    top: 100%;
+    right: 0;
+
+
+    background-color: #fff;
+	border: thin solid #aaa;
+ 
+    display: none;
+    overflow: hidden;
+
+}
+ 
+.dropdown_container:hover > .popup{
+    display: inline-block;
+}
     </style>
 </head>
 
 <body>
-    <nav class="navbar navbar-primary bg-primary text-light p-0 sticky-top">
+
+	
+    <nav class="navbar navbar-primary bg-primary text-light p-0 sticky-top yamm">
         <h1 class="h3">ミリシタ4コマビューア<div id="loading"><div class="dot dot1"></div><div class="dot dot2"></div><div class="dot dot3"></div><span id="loading_text">Loading...</span></div></h1>
         <div id="navigation">
             <button type="button" id="first_button" class="btn btn-primary">&lt;&lt;</button>
@@ -90,6 +123,7 @@
             <button type="button" id="last_button" class="btn btn-primary">&gt;&gt;</button>
         </div>
         <div >
+			<!--
             <input type="checkbox" id="leading_actor" value="" >主役回のみ
             <select id="idols1">
                 <option value="">登場人物1</option>
@@ -101,6 +135,23 @@
             <select id="drawers">
                 <option value="">作画</option>
             </select>
+			-->
+			<ul class="dropdown_nav">
+				<li class="dropdown_container"><input type="checkbox" id="leading_actor" value="" >主役回のみ</li>
+				<li class="dropdown_container">
+					<button type="button" class="btn btn-primary"><span id="idol1_name">アイドル1▼</span></button>
+					<div id="idol1_menu" class="popup"></div>
+				</li>
+				<li class="dropdown_container">
+					<button type="button" class="btn btn-primary"><span id="idol2_name">アイドル2▼</span></button>
+					<div id="idol2_menu" class="popup"></div>
+				</li>
+				<li class="dropdown_container">
+					<select id="drawers">
+						<option value="">作画</option>
+					</select>
+				</li>
+			</ul>
         </div>
 
     </nav>
@@ -117,14 +168,11 @@
             <li>バグ報告や機能改善案などは<a href="https://github.com/tankarup/">Github</a>へ</li>
         </ul>
     </div>
+
     <script src="main.js"></script>
     <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-    <script
-    src="https://code.jquery.com/jquery-3.3.1.min.js"
-    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-    crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
 
 </html>
