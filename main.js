@@ -18,12 +18,19 @@ window.onload = function () {
     // 【main-script】 を実行
     getJsonp_GAS();
 
+	
+
     if (screen.width > 700){
 		icon_size = 64;
 		number_per_page = 6;
 		number_menu_columns = 6;
 
-		document.getElementById("main_navbar").classList.add("sticky-top")
+		document.getElementById("main_navbar").classList.add("sticky-top");
+
+		const popups = document.getElementsByClassName('popup');
+		for (let popup of popups){
+			popup.style.maxWidth = '1000px';
+		}
 	}
     //PCの場合は表示数を10に増やす
     if (screen.width > 1000){
