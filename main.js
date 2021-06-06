@@ -10,15 +10,22 @@ let drawer = '';
 let page = 0;
 let viewing_koma = 0;
 let number_per_page = 4;
+let number_menu_columns = 3;
 
 // ページ読み込み後の処理
 window.onload = function () {
     // 【main-script】 を実行
     getJsonp_GAS();
 
-    if (screen.width > 700) number_per_page = 6;
+    if (screen.width > 700){
+		number_per_page = 6;
+		number_menu_columns = 6;
+	}
     //PCの場合は表示数を10に増やす
-    if (screen.width > 1000) number_per_page = 12;
+    if (screen.width > 1000){
+		number_per_page = 12;
+		number_menu_columns = 8;
+	}
 
 
 }
@@ -91,7 +98,7 @@ function get_person_list(key){
 function init_idol_menu(num){
 	let appended_idol_list = [];
 	let html = '';
-	html += `<ul class="dropdown_nav" style="column-count: 8;column-gap: 5px;">`;
+	html += `<ul class="dropdown_nav" style="column-count: ${number_menu_columns};column-gap: 5px;">`;
 	const lines = idol_icons.split('\n');
 	for (let line of lines){
 		if (line.length < 1) continue;
