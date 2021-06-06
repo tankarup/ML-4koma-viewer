@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>4コマに見る三角関係</title>
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet">
+    <style type="text/css">
+      #network {
+        width:  1600px;
+        height: 1000px;
+        border: 1px solid #000;
+      }
+    </style>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+</head>
+<body>
+	<div id="network"></div>
+<script>
+const yonkoma = `紬	ジュリア	あずさ					
+歌織	星梨花	莉緒					
+千早	静香	可奈	春香	美咲			
+奈緒	美奈子	紬					
+春香	未来	桃子	千早				
+可憐	麗花	美也	昴				
+昴	やよい	恵美					
+育	瑞希						
+真美	エレナ	紗代子	律子	美咲			
+貴音							
+海美	環	律子					
+麗花	紗代子	奈緒	海美				
+このみ	未来	星梨花	莉緒				
+真	雪歩	歩	春香	美咲			
+あずさ	奈緒	のり子					
+桃子	育	春香					
+のり子	琴葉	百合子	エミリー				
+星梨花	静香	莉緒					
+エミリー	歌織	真					
+亜利沙	海美	可奈					
+律子	可憐	雪歩					
+	茜	美咲					
+エレナ	琴葉	恵美					
+響	貴音	紬					
+朋花	亜利沙						
+やよい	千鶴	伊織					
+莉緒	翼						
+伊織	志保	美希	昴	環			
+茜	ジュリア	エミリー					
+琴葉	恵美	美也	海美	環			
+美希	風花						
+ロコ	貴音						
+亜美	恵美	琴葉	真美				
+美奈子	奈緒						
+未来	奈緒	海美	美奈子	可奈			
+静香	紗代子	環					
+翼	春香						
+千鶴	ひなた	昴					
+このみ	莉緒						
+雪歩	桃子	千鶴					
+杏奈	歌織						
+恵美	海美	可憐					
+百合子	杏奈	雪歩					
+エレナ	美也	琴葉	恵美				
+志保	桃子	可奈					
+千早	亜利沙	茜					
+美奈子	ひなた	育	このみ	真美			
+風花	エミリー	このみ					
+紗代子	紬	百合子					
+環	瑞希						
+真美	雪歩	ひなた	育				
+桃子	星梨花	育					
+美也	可奈	育					
+莉緒	このみ	風花					
+やよい	未来	静香	翼				
+伊織							
+歩	亜美	律子					
+亜利沙	翼	ジュリア					
+真	星梨花						
+紬	のり子						
+瑞希	貴音	桃子					
+可憐	瑞希						
+朋花	育						
+律子	茜	小鳥					
+海美	琴葉	杏奈					
+ロコ	やよい						
+紗代子	翼						
+麗花	茜	ロコ	ジュリア				
+やよい	星梨花	伊織					
+千鶴	ロコ	雪歩	桃子				
+あずさ	静香	千早					
+志保	環	風花					
+可奈	歌織	紗代子					
+静香	ジュリア	未来	翼				
+のり子	環	奈緒					
+美希	莉緒	百合子					
+未来	茜	麗花					
+育	美咲	小鳥					
+美也	茜	美咲					
+紬	奈緒	雪歩	エレナ	可憐	恵美	春香	
+茜	麗花	美也	歩				
+昴	ロコ	朋花	百合子				
+奈緒	未来	杏奈	響	風花			
+このみ	美咲						
+静香	翼	志保	亜利沙				
+千早	このみ						
+琴葉	亜美	真美					
+海美	美奈子	紬					
+朋花	千鶴	美希					
+美也	桃子						
+エミリー	ロコ	可奈	貴音				
+志保	杏奈	環					
+響	風花	志保	翼				
+千早	美希	エレナ					
+貴音	エミリー	育					
+	百合子	貴音					
+歌織	風花	育					
+真	ひなた	環					
+真美	美咲						
+桃子	のり子	春香	亜利沙	奈緒			
+杏奈	百合子	亜利沙	奈緒				
+伊織	麗花	昴	百合子	美希			
+のり子	昴						
+ロコ	やよい	杏奈	歌織				
+雪歩	エミリー						
+可奈	千早	春香					
+歩	可奈	瑞希					
+星梨花	美咲						
+育	百合子	亜利沙					
+麗花	瑞希						
+未来	小鳥						
+可憐	茜	翼					
+春香	美希	奈緒					
+ひなた	莉緒						
+あずさ	伊織	亜美					
+桃子	亜利沙						
+紬	ジュリア						
+エレナ	瑞希	莉緒					
+恵美	海美	環					
+翼	静香	未来					
+千早	茜						
+貴音	亜美	真美					
+莉緒	風花	歌織					
+育	歌織	このみ					
+紗代子	恵美	ジュリア					
+千鶴	静香						
+環	伊織	千鶴	貴音	ひなた			
+瑞希	翼	このみ	莉緒				
+響	海美	可奈	貴音				
+可奈	志保						
+美奈子	ロコ						
+茜							
+真美	のり子						
+杏奈	百合子						
+ジュリア	翼						
+風花	ひなた	海美					
+琴葉	恵美	エレナ					
+ひなた	星梨花						
+亜利沙	奈緒	小鳥					
+やよい	律子						
+美希	紗代子	律子	美也				
+響	環	海美	律子				
+昴	百合子	静香					
+桃子	恵美	奈緒					
+育	美奈子	可奈					
+環	桃子						
+茜	貴音	未来	星梨花				
+朋花	可奈	杏奈	未来				
+ジュリア	可奈	環	育	恵美	琴葉		
+紗代子	百合子						
+亜美	真美	志保					
+真							
+春香	美希	エミリー					
+恵美	亜利沙	美奈子					
+奈緒	海美	美奈子	紗代子	のり子			
+翼	昴	美希					
+伊織	やよい	亜利沙					
+歌織	このみ						
+のり子	桃子	春香					
+あずさ	麗花	美也					
+美奈子	可奈						
+ロコ	杏奈						
+美也	杏奈	静香					
+エレナ	美也	莉緒					
+麗花	茜	志保					
+律子	未来						
+可憐	春香						
+雪歩	桃子						
+響	亜美	真美	貴音	瑞希			
+星梨花	このみ	莉緒					
+百合子							
+杏奈	未来	ロコ	奈緒	星梨花	百合子		
+星梨花	亜利沙	恵美	あずさ	昴	美咲		
+静香	未来						
+春香	未来	亜利沙	千早				
+海美	琴葉						
+翼	美咲						
+瑞希	美奈子						
+昴	伊織	恵美					
+風花	歩	美咲					
+真	奈緒						
+美希	歩	律子					
+志保	伊織						
+未来	昴	静香	翼				
+可奈	杏奈						
+瑞希	志保	紬					
+雪歩	貴音	静香	千鶴				
+静香	未来	翼					
+亜美	琴葉	真美					
+ロコ	響	美咲					
+律子	昴						
+桃子	育	環	美咲				
+のり子	美希	奈緒	桃子				
+やよい	ロコ	ジュリア					
+莉緒	真						
+風花							
+海美	奈緒	のり子	紗代子	美奈子			
+昴	このみ						
+このみ	翼						
+エミリー	伊織						
+恵美	歌織	琴葉					
+春香	翼	桃子	茜				
+可憐	春香						
+千早	エミリー	紬					
+ひなた	桃子						
+奈緒	千鶴	歩					
+杏奈							
+美奈子	真美						
+このみ	小鳥	美咲					
+千鶴	エレナ	星梨花					
+志保							
+琴葉	美也	ジュリア					
+真美	可憐	春香					
+莉緒	朋花						
+育							
+伊織	志保	千鶴					
+茜	亜利沙	ジュリア					
+百合子	朋花	昴	ロコ				
+紗代子	あずさ	海美	貴音	環			
+ジュリア	奈緒	貴音					
+歌織	律子	美咲					
+エレナ	瑞希	育					
+貴音	ロコ	響					
+歩	桃子	昴	ロコ				
+百合子	瑞希						
+環	亜利沙	小鳥					
+ジュリア	茜						
+恵美							
+美也	エレナ	茜					
+朋花	恵美						
+美希	朋花	百合子					
+紬	美奈子						
+未来	ひなた	星梨花					
+エレナ	琴葉						
+静香							
+茜	千早	麗花					
+環	琴葉	亜利沙	小鳥				
+春香	千早	美希	志保	可奈			
+やよい	美奈子	このみ					
+海美	紗代子						
+昴	志保						
+歌織	莉緒	このみ	風花				
+歩	環	律子					
+エミリー	亜美	星梨花					
+星梨花	可憐						
+亜利沙	杏奈						
+紗代子	のり子	杏奈					
+志保	育	美咲	千早				
+律子	真						
+麗花	伊織						
+瑞希	桃子	このみ					
+翼	可憐	茜					
+可奈	琴葉	未来	春香				
+恵美	美咲						
+美希	歩						
+朋花	歌織	杏奈					
+星梨花	静香	このみ					
+真	ジュリア	昴					
+可憐	恵美	杏奈	雪歩				
+雪歩	響	貴音					
+莉緒	杏奈	百合子					
+風花	莉緒						
+奈緒	歩						
+ロコ	未来						
+あずさ	このみ	莉緒					
+のり子							
+ひなた							
+紬	エミリー						
+海美	春香						
+このみ	莉緒	亜美	ロコ				
+響	翼	律子	美希				
+春香	亜美	亜利沙	奈緒				
+環	桃子						
+千鶴	律子	亜利沙					
+あずさ	翼						
+千早	環						
+可憐	律子	風花	あずさ				
+育	莉緒						
+亜美	律子	風花					
+伊織	エミリー						
+響	恵美						
+千鶴	環						
+雪歩	海美	育	歩				
+エレナ	千鶴	ひなた					
+ジュリア	麗花						
+のり子	美咲						
+このみ	美希	静香					
+美希	麗花	小鳥					
+琴葉	朋花	恵美					
+桃子	杏奈	春香					
+美奈子							
+瑞希							
+百合子	紗代子	海美					
+美也	ひなた	可憐	星梨花				
+莉緒	このみ	風花	貴音				
+志保	麗花	静香	歌織	可奈			
+奈緒	歩	志保					
+ひなた	亜利沙						
+恵美							
+麗花	琴葉	茜					
+歌織	莉緒	このみ					
+紬							
+可奈	貴音	志保	静香				
+やよい	伊織						
+紗代子							
+真美	亜美						
+ロコ	亜美	静香	翼				
+杏奈	のり子						
+茜	ロコ						
+律子	茜						
+百合子	美咲						
+杏奈	百合子	ロコ					
+亜利沙	恵美	可奈					
+千早	律子	春香					
+桃子	風花	このみ					
+やよい	ジュリア	伊織					
+美奈子	可奈	美咲					
+風花	百合子						
+真	雪歩						
+海美							
+環	恵美	響					
+朋花	春香	恵美					
+星梨花	奈緒						
+翼	未来	静香	美希				
+貴音	ひなた						
+奈緒	美奈子						
+茜	ジュリア	麗花					
+律子	亜美	真美					
+伊織	美奈子	やよい	瑞希				
+ひなた	伊織						
+可奈	千早	ジュリア					
+風花	このみ	春香					
+育	桃子						
+亜美	真美						
+美也							
+ロコ	千鶴	茜					
+静香	星梨花	亜利沙					
+麗花	亜利沙	海美					
+莉緒							
+エミリー	朋花	紬					
+歩	恵美	瑞希					
+伊織	朋花	昴					
+可奈	歌織						
+美希	真						
+百合子	小鳥	律子					
+千早	エミリー	美希					
+翼							
+朋花	響						`;
+const idols_text = `春香	haruka	#e22b30
+千早	chihaya	#2743d2
+美希	miki	#b4e04b
+雪歩	yukiho	#d3dde9
+やよい	yayoi	#f39939
+真	makoto	#515558
+伊織	iori	#fd99e1
+貴音	takane	#a6126a
+律子	ritsuko	#01a860
+あずさ	azusa	#9238be
+亜美	ami	#ffe43f
+真美	mami	#ffe43e
+響	hibiki	#01adb9
+未来	mirai	#ea5b76
+静香	shizuka	#6495cf
+翼	tsubasa	#fed552
+琴葉	kotoha	#92cfbb
+エレナ	elena	#9bce92
+美奈子	minako	#58a6dc
+恵美	megumi	#454341
+まつり	matsuri	#5abfb7
+星梨花	serika	#ed90ba
+茜	akane	#eb613f
+杏奈	anna	#7e6ca8
+ロコ	roco	#fff03c
+百合子	yuriko	#c7b83c
+紗代子	sayoko	#7f6575
+亜利沙	arisa	#b54461
+海美	umi	#e9739b
+育	iku	#f7e78e
+朋花	tomoka	#bee3e3
+エミリー	emily	#554171
+志保	shiho	#afa690
+歩	ayumu	#e25a9b
+ひなた	hinata	#d1342c
+可奈	kana	#f5ad3b
+奈緒	nao	#788bc5
+千鶴	chizuru	#f19557
+このみ	konomi	#f1becb
+環	tamaki	#ee762e
+風花	fuka	#7278a8
+美也	miya	#d7a96b
+のり子	noriko	#eceb70
+瑞希	mizuki	#99b7dc
+可憐	karen	#b63b40
+莉緒	rio	#f19591
+昴	subaru	#aeb49c
+麗花	reika	#6bb6b0
+桃子	momoko	#efb864
+ジュリア	julia	#d7385f
+紬	tsumugi	#ebe1ff
+歌織	kaori	#274079`;
+
+//
+/*
+[
+	[春香, 千早, 美希],//春香が主役の回に千早と美希が参加
+	[ジュリア, 紬],
+]
+*/
+let datas = [];
+const lines = yonkoma.split('\n');
+for (let line of lines){
+	if (line.length < 1) continue;
+	datas.push(line.split('\t'));
+}
+//アイドル一覧
+let idols = []; //[春香, 千早, 美希, ...]
+let idol_attr = {}; //{春香: {icon: icons/haruka.jpg ,color: #aaaaaa}}
+
+let idol_lines = idols_text.split('\n');
+for (let line of idol_lines){
+	const items = line.split('\t');
+	idols.push(items[0]);
+	idol_attr[items[0]] = {
+		icon: `icons/${items[1]}.jpg`,
+		color: items[2],
+	}
+}
+
+//脇役として参加した回の主役名をカウント
+/*
+{
+	春香:{千早:2, 美希:2,...}, //春香は千早の主役回に2回参加した
+	千早:{春香: 3, 美希:2, ...},
+}
+*/
+let likes = {};
+//変数の初期化
+for (let idol of idols){
+	likes[idol] = {};
+	for (let idol2 of idols){
+		likes[idol][idol2] = 0;
+	}
+}
+
+for (let data of datas){
+	for (let i = 1; i < data.length; i++){
+		if (likes[data[i]]){
+			likes[data[i]][data[0]] += 1;
+		}
+
+	}
+}
+console.log(likes);
+
+//Vis用データを作る
+/*
+[
+        {from: 1, to: 2, arrows: 'to'},
+        {from: 1, to: 3, arrows: 'to'},
+        {from: 3, to: 4, arrows: 'to'},
+        {from: 6, to: 1, arrows: 'to'},
+        {from: 7, to: 8, arrows: 'to'},
+        {from: 8, to: 7, arrows: 'to'},
+      ]
+*/
+let edges = [];
+for (let idol_from in likes){
+	const like = likes[idol_from];
+	let max_like = 2; //2回以下のライクは無視
+	let loved_idols = [];
+	for (let idol_to of idols){
+		if (like[idol_to] == max_like){
+			loved_idols.push(idol_to);
+		}
+		if (like[idol_to] > max_like){
+			loved_idols = [idol_to];
+			max_like = like[idol_to];
+		}
+	}
+	for (let loved_idol of loved_idols){
+		edges.push({
+			from: idol_from,
+			to: loved_idol,
+			arrows: 'to',
+			value: max_like,
+			title: '' + max_like,
+		});
+	}
+	
+}
+console.log(edges);
+
+/*
+[
+        {id: 1, label: 'A'},
+        {id: 2, label: 'B'},
+        {id: 3, label: 'C'},
+        {id: 4, label: 'D'},
+        {id: 5, label: 'E'},
+        {id: 6, label: 'F'},
+        {id: 7, label: 'G'},
+        {id: 8, label: 'H'},
+      ]
+*/
+let nodes = [];
+for (let idol of idols){
+	nodes.push({
+		id: idol,
+		//label: idol,
+		font: {size: 25},
+		shape: 'circularImage',
+		image: idol_attr[idol].icon,
+		size: 30,
+		color: idol_attr[idol].color,
+		borderWidth: 5,
+
+	});
+}
+console.log(nodes);
+
+var container = document.getElementById('network');
+var data = {
+nodes: nodes,
+edges: edges
+};
+var options = {
+};
+var network = new vis.Network(container, data, options);
+
+
+</script>
+</body>
+</html>
