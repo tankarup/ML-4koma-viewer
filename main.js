@@ -10,8 +10,8 @@ let drawer = '';
 let page = 0;
 let viewing_koma = 0;
 let number_per_page = 4;
-let number_menu_columns = 4;
-let icon_size = 32;
+let number_menu_columns = 3;
+let icon_size = 64;
 
 // ページ読み込み後の処理
 window.onload = function () {
@@ -148,6 +148,36 @@ function init_idol_menu(num){
 	document.getElementById(`idol${num}_menu`).innerHTML = html;
 
 }
+//アイドル一覧メニューの表示・非表示処理
+Array.from(document.getElementsByClassName('dropdown_container')).forEach(function(element){
+	function isLefty(elem){
+		const rect = elem.getBoundingClientRect();
+		const w = window.innerWidth;
+		const h = window.innerHeight;
+		const left_gap = rect.left;
+		const right_gap = w - rect.right;
+		return left_gap < right_gap;
+	}
+
+	element.addEventListener('mouseover', function(){
+
+		Array.from(this.getElementsByClassName('popup')).forEach(function(popup){
+			popup.style.display = 'inline-block';
+			if (isLefty(element)){
+				popup.classList.add('left0');
+				popup.classList.remove('right0');				
+			} else {
+				popup.classList.remove('left0');
+				popup.classList.add('right0');	
+			}
+		});
+	});
+	element.addEventListener('mouseout', function(){
+		Array.from(this.getElementsByClassName('popup')).forEach(function(popup){
+			popup.style.display = 'none';
+		});
+	});
+});
 
 function init_menu(){
 
