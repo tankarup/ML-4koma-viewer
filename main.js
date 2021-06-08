@@ -109,13 +109,13 @@ function get_person_list(key){
 function init_idol_menu(num){
 	let appended_idol_list = [];
 	let html = '';
-	html += `<ul class="dropdown_nav" style="column-count: ${number_menu_columns};column-gap: 5px;">`;
+	html += ``;
 	const lines = idol_icons.split('\n');
 	for (let line of lines){
 		if (line.length < 1) continue;
 		const items = line.split('\t');
 		html += `
-			<li style="margin-bottom: 5px;">
+			<div class="idol_menu_item">
 
 					<img
 						src="icons/${items[0]}.jpg"
@@ -127,7 +127,7 @@ function init_idol_menu(num){
 						onClick="set_idol${num}('${items[1]}');"
 					>
 
-			</li>`;
+			</div>`;
 		appended_idol_list.push(items[1]);
 	}
 	//アイコンがないメンバーを追加
@@ -135,17 +135,19 @@ function init_idol_menu(num){
 	for (let name of idol_names_from_data){
 		if (appended_idol_list.indexOf(name) == -1){
 			html += `
-			<li style="margin-bottom: 5px;">
+			<div class="idol_menu_item">
 				<button type="button" class="btn btn-outline-secondary btn-sm" onClick="set_idol${num}('${name}');">${name}</button>
-			</li>`;
+			</div>`;
 		}
 	}
 	//選択解除ボタン
 	html += `
-		<li>
+		<div class="idol_menu_item">
 			<button type="button" class="btn btn-warning" onClick="set_idol${num}('');">Clear</button>
-		</li>`;
-	document.getElementById(`idol${num}_menu`).innerHTML = html;
+		</div>`;
+	const menu = document.getElementById(`idol${num}_menu`);
+	menu.style.width = `${(icon_size + 4)* number_menu_columns + 2}px`;
+	menu.innerHTML = html;
 
 }
 //アイドル一覧メニューの表示・非表示処理
