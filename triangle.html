@@ -365,7 +365,11 @@ const yonkoma = `紬	ジュリア	あずさ
 百合子	小鳥	律子					
 千早	エミリー	美希					
 翼							
-朋花	響						`;
+朋花	響						
+ひなた	茜	静香					
+桃子	律子	育	環				
+エミリー	紗代子	エレナ					
+星梨花	エレナ	静香					`;
 const idols_text = `春香	haruka	#e22b30
 千早	chihaya	#2743d2
 美希	miki	#b4e04b
@@ -421,7 +425,7 @@ const idols_text = `春香	haruka	#e22b30
 
 //
 /*
-[
+datas = [
 	[春香, 千早, 美希],//春香が主役の回に千早と美希が参加
 	[ジュリア, 紬],
 ]
@@ -432,6 +436,21 @@ for (let line of lines){
 	if (line.length < 1) continue;
 	datas.push(line.split('\t'));
 }
+
+/* 自分が主役の回に参加してくれた人数
+liked = {
+	春香:2, 
+	千早:3,
+
+}
+*/
+let liked = {};
+for (let data of datas){
+	const count_submembers = data.filter(item => item.length > 0).length - 1;
+	liked[data[0]] = liked[data[0]] ? liked[data[0]] + count_submembers : count_submembers;
+}
+console.log(liked);
+
 //アイドル一覧
 let idols = []; //[春香, 千早, 美希, ...]
 let idol_attr = {}; //{春香: {icon: icons/haruka.jpg ,color: #aaaaaa}}
@@ -504,6 +523,7 @@ for (let idol_from in likes){
 			arrows: 'to',
 			value: max_like,
 			title: '' + max_like,
+
 		});
 	}
 	
@@ -533,6 +553,11 @@ for (let idol of idols){
 		size: 30,
 		color: idol_attr[idol].color,
 		borderWidth: 5,
+		value: liked[idol],
+		scaling: {
+			max: 40,
+			min: 15,
+		},
 
 	});
 }
