@@ -369,7 +369,11 @@ const yonkoma = `紬	ジュリア	あずさ
 ひなた	茜	静香					
 桃子	律子	育	環				
 エミリー	紗代子	エレナ					
-星梨花	エレナ	静香					`;
+星梨花	エレナ	静香					
+可憐	環						
+未来	春香						
+真美	可憐						
+亜利沙	海美	奈緒	律子				`;
 const idols_text = `春香	haruka	#e22b30
 千早	chihaya	#2743d2
 美希	miki	#b4e04b
@@ -467,7 +471,7 @@ for (let line of idol_lines){
 
 //脇役として参加した回の主役名をカウント
 /*
-{
+likes = {
 	春香:{千早:2, 美希:2,...}, //春香は千早の主役回に2回参加した
 	千早:{春香: 3, 美希:2, ...},
 }
@@ -522,7 +526,7 @@ for (let idol_from in likes){
 			to: loved_idol,
 			arrows: 'to',
 			value: max_like,
-			title: '' + max_like,
+			title: idol_from + '♡'.repeat(max_like) + loved_idol,
 
 		});
 	}
