@@ -287,9 +287,10 @@ function update_list(){
 
 function filter_by_idols(){
     let stories = [];
+	//「主役のみ」がチェックされていたら、アイドル１で主役判定。アイドル２はゲスト回も表示
     if (document.getElementById("leading_actor").checked){
         for (let story of data){
-            if ((story.idols.indexOf(idol1) == 0 || idol1 == '') && (story.idols.indexOf(idol2) == 0 || idol2 == '') && (story.drawers.indexOf(drawer) >= 0 || drawer == '')){
+            if ((story.idols.indexOf(idol1) == 0 || idol1 == '') && (story.idols.indexOf(idol2) >= 0 || idol2 == '') && (story.drawers.indexOf(drawer) >= 0 || drawer == '')){
                 stories.push(story);
             }
         }
