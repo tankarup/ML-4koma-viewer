@@ -527,6 +527,23 @@ for (let idol_from in likes){
 			arrows: 'to',
 			value: max_like,
 			title: idol_from + '♡'.repeat(max_like) + loved_idol,
+			color: {
+				color: '#aaa',
+				highlight: idol_attr[idol_from].color,
+			},
+			label: '♡'.repeat(max_like),
+			font: {
+				size: 0,
+			},
+			scaling: {
+				label: false,
+			},
+			chosen:{
+				label: function(values, id, selected, hovering) {
+					values.size = 20;
+					values.color = idol_attr[idol_from].color;
+				},
+			},
 
 		});
 	}
@@ -556,7 +573,7 @@ for (let idol of idols){
 		image: idol_attr[idol].icon,
 		size: 30,
 		color: idol_attr[idol].color,
-		borderWidth: 5,
+		borderWidth: 2,
 		value: liked[idol],
 		scaling: {
 			max: 40,
