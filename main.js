@@ -7,6 +7,7 @@ let drawer_list = [];
 let idol1 = '';
 let idol2 = '';
 let drawer = '';
+let main_only = false;
 let page = 0;
 let viewing_koma = 0;
 let number_per_page = 4;
@@ -202,9 +203,15 @@ function init_menu(){
 function load_url_params(){
     const idol1_name = getParam('idol1');
     const idol2_name = getParam('idol2');
+	const param_main_only = getParam('main');
 
     idol1 = idol1_name ? idol1_name : '';
     idol2 = idol2_name ? idol2_name : '';
+	main_only = param_main_only ? param_main_only.toLocaleLowerCase() === 'true' : false;
+
+	set_idol1(idol1);
+	set_idol2(idol2);
+	document.getElementById('main_only').checked = main_only;
 	/*
     document.getElementById('idols1').value = idol1;
     document.getElementById('idols2').value = idol2;
@@ -275,7 +282,7 @@ document.getElementById('last_button').addEventListener('click', function(){
     update_tweets(current_list);
 });
 
-document.getElementById('leading_actor').addEventListener('change', function(){
+document.getElementById('main_only').addEventListener('change', function(){
 
     update_list();
 });
@@ -288,7 +295,7 @@ function update_list(){
 function filter_by_idols(){
     let stories = [];
 	//「主役のみ」がチェックされていたら、アイドル１で主役判定。アイドル２はゲスト回も表示
-    if (document.getElementById("leading_actor").checked){
+    if (document.getElementById("main_only").checked){
         for (let story of data){
             if ((story.idols.indexOf(idol1) == 0 || idol1 == '') && (story.idols.indexOf(idol2) >= 0 || idol2 == '') && (story.drawers.indexOf(drawer) >= 0 || drawer == '')){
                 stories.push(story);

@@ -601,6 +601,14 @@ var options = {
 	interaction: interaction,
 };
 var network = new vis.Network(container, data, options);
+network.on('click', function(params){
+	console.log(params);
+	//ノードが選択されていた場合
+	if (params.nodes.length > 0){
+		//選択されているアイドルの主役回を表示
+		window.open(`https://tankarup.github.io/ML-4koma-viewer/4koma.html?idol1=${params.nodes[0]}&main=true`, '_blank');
+	}
+});
 
 
 </script>
