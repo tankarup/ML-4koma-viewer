@@ -543,6 +543,9 @@ for (let idol_from in likes){
 					values.size = 20;
 					values.color = idol_attr[idol_from].color;
 				},
+				edge:   function(values, id, selected, hovering) {
+					values.color = idol_attr[idol_from].color;
+				},
 			},
 
 		});
@@ -584,12 +587,18 @@ for (let idol of idols){
 }
 console.log(nodes);
 
+const interaction = {
+	hover: true,
+};
+
 var container = document.getElementById('network');
 var data = {
 nodes: nodes,
-edges: edges
+edges: edges,
+
 };
 var options = {
+	interaction: interaction,
 };
 var network = new vis.Network(container, data, options);
 
