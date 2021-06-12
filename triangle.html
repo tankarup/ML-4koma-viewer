@@ -506,7 +506,7 @@ console.log(likes);
         {from: 8, to: 7, arrows: 'to'},
       ]
 */
-let edges = [];
+let edges = new vis.DataSet();
 for (let idol_from in likes){
 	const like = likes[idol_from];
 	let max_like = 2; //2回以下のライクは無視
@@ -521,12 +521,12 @@ for (let idol_from in likes){
 		}
 	}
 	for (let loved_idol of loved_idols){
-		edges.push({
+		edges.add({
 			from: idol_from,
 			to: loved_idol,
 			arrows: 'to',
 			value: max_like,
-			title: idol_from + '♡'.repeat(max_like) + loved_idol,
+			title: idol_from + '♡'.repeat(max_like) + loved_idol + ' (Click to open 4koma)',
 			color: {
 				color: '#aaa',
 				highlight: idol_attr[idol_from].color,
@@ -566,9 +566,9 @@ console.log(edges);
         {id: 8, label: 'H'},
       ]
 */
-let nodes = [];
+let nodes = new vis.DataSet();
 for (let idol of idols){
-	nodes.push({
+	nodes.add({
 		id: idol,
 		//label: idol,
 		font: {size: 25},
@@ -582,6 +582,7 @@ for (let idol of idols){
 			max: 40,
 			min: 15,
 		},
+		title: idol + ' (Click to open 4koma)',
 
 	});
 }
@@ -607,7 +608,17 @@ network.on('click', function(params){
 	if (params.nodes.length > 0){
 		//選択されているアイドルの主役回を表示
 		window.open(`https://tankarup.github.io/ML-4koma-viewer/4koma.html?idol1=${params.nodes[0]}&main=true`, '_blank');
+		return;
 	}
+	if (params.edges.length > 0){
+		const edge_id = params.edges[0];
+		const edge = edges.get(edge_id);
+		console.log(edge);
+		window.open(`https://tankarup.github.io/ML-4koma-viewer/4koma.html?idol1=${edge.to}&main=true&idol2=${edge.from}`, '_blank');
+		return;
+
+	}
+
 });
 
 
