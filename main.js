@@ -336,7 +336,7 @@ function get_participated_idols_text(idols){
 				src="icons/${idol_icon[name].id}.jpg"
 				alt="${idol_icon[name].name}"
 				title="${idol_icon[name].name}"
-				style="width:40px;border: thin solid ${idol_icon[name].color};border-radius: 20%;"
+				style="width:40px;border: 2px solid ${idol_icon[name].color};border-radius: 20%;"
 			>`;
 		} else {
 			text += ' ' + name;
