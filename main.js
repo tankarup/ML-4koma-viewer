@@ -111,26 +111,26 @@ function init_idol_menu(num){
 	let appended_idol_list = [];
 	let html = '';
 	html += ``;
-	const lines = idol_icons.split('\n');
-	for (let line of lines){
-		if (line.length < 1) continue;
-		const items = line.split('\t');
+	idol_icon
+	for (let i = 0; i < 52; i++){
+		const name = idol_name_standard_list[i];
 		html += `
-			<div class="idol_menu_item">
+		<div class="idol_menu_item">
 
-					<img
-						src="icons/${items[0]}.jpg"
-						alt="${items[1]}"
-						title="${items[1]}"
-						style="width:${icon_size}px;border: medium solid #fff;"
-						onMouseOver="this.style.borderColor='${items[2]}'"
-						onMouseOut="this.style.borderColor='#fff'"
-						onClick="set_idol${num}('${items[1]}');"
-					>
+				<img
+					src="icons/${idol_icon[name].id}.jpg"
+					alt="${idol_icon[name].name}"
+					title="${idol_icon[name].name}"
+					style="width:${icon_size}px;border: medium solid #aaa;border-radius: 50%;"
+					onMouseOver="this.style.borderColor='${idol_icon[name].color}'"
+					onMouseOut="this.style.borderColor='#aaa'"
+					onClick="set_idol${num}('${idol_icon[name].name}');"
+				>
 
-			</div>`;
-		appended_idol_list.push(items[1]);
+		</div>`;
+		appended_idol_list.push(idol_icon[name].name);
 	}
+
 	//アイコンがないメンバーを追加
 	const idol_names_from_data = get_person_list('idols');
 	for (let name of idol_names_from_data){
@@ -227,14 +227,27 @@ function getParam(name, url) {
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
+function get_menu_idol_label(name){
+	if (idol_icon[name]){
+		return `<img
+			src="icons/${idol_icon[name].id}.jpg"
+			alt="${idol_icon[name].name}"
+			title="${idol_icon[name].name}"
+			style="width:40px;border: medium solid ${idol_icon[name].color};border-radius: 50%;"
+		>`;
+	}
+	return name;
+
+	return name;
+}
 function set_idol1(name){
-	document.getElementById('idol1_name').innerText = (name != '') ? name : 'アイドル1▼';
+	document.getElementById('idol1_name').innerHTML = (name != '') ? get_menu_idol_label(name) : 'アイドル1▼';
 	idol1 = name;
 	viewing_koma = 0;
 	update_list();
 }
 function set_idol2(name){
-	document.getElementById('idol2_name').innerText = (name != '') ? name : 'アイドル2▼';
+	document.getElementById('idol2_name').innerHTML = (name != '') ? get_menu_idol_label(name) : 'アイドル2▼';
 	idol2 = name;
 	viewing_koma = 0;
 	update_list();
@@ -314,6 +327,24 @@ function filter_by_idols(){
     return stories;
 }
 
+function get_participated_idols_text(idols){
+	let text = '';
+	for (let name of idols){
+		if (idol_icon[name]) {
+			text += `
+			<img
+				src="icons/${idol_icon[name].id}.jpg"
+				alt="${idol_icon[name].name}"
+				title="${idol_icon[name].name}"
+				style="width:40px;border: thin solid ${idol_icon[name].color};border-radius: 20%;"
+			>`;
+		} else {
+			text += ' ' + name;
+		}
+	}
+	return text;
+}
+
 function update_tweets(stories){
     const init = page*number_per_page;
 
@@ -340,7 +371,7 @@ function update_tweets(stories){
         if (i > stories.length -1) break;
         html += `
         <div class="story -col-xl-3 -col-md-4 -col-sm-12 ">
-            <p><a target="_blank" href="${stories[i].url}"><span style="font-size:1.3em; font-weight: bold;">${stories[i].title}</span> <img src="open.png" style="width:1em; height:1em;"></a><br>${stories[i].idols.join(', ')}</p>
+            <p><a target="_blank" href="${stories[i].url}"><span style="font-size:1.3em; font-weight: bold;">${stories[i].title}</span> <img src="open.png" style="width:1em; height:1em;"></a><br>${get_participated_idols_text(stories[i].idols)}</p>
             <blockquote class="twitter-tweet">
                 <a href="${stories[i].url}">#ミリシタ4コマ 公式ツイート</a>
             </blockquote>
@@ -441,8 +472,17 @@ for (let idol_line of idol_lines){
 
 }
 
-
-const idol_icons = `haruka	春香	#e22b30
+/*
+idol_icon = {
+	春香: {
+		id: haruka,
+		color: #e22b30,
+	},
+}
+*/
+let idol_icon = {};
+{
+const idol_icons_data = `haruka	春香	#e22b30
 chihaya	千早	#2743d2
 miki	美希	#b4e04b
 yukiho	雪歩	#d3dde9
@@ -496,3 +536,14 @@ tsumugi	紬	#ebe1ff
 kaori	歌織	#274079
 
 `;
+	const lines = idol_icons_data.split('\n');
+	for (let line of lines){
+		if (line.length < 1) continue;
+		const items = line.split('\t');
+		idol_icon[items[1]] = {
+			id: items[0],
+			color: items[2],
+			name: items[1],
+		};
+	}
+}
