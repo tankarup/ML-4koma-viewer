@@ -111,26 +111,30 @@ function init_idol_menu(num){
 	let appended_idol_list = [];
 	let html = '';
 	html += ``;
-	idol_icon
-	for (let i = 0; i < 52; i++){
-		const name = idol_name_standard_list[i];
-		html += `
-		<div class="idol_menu_item">
+	for (let name of idol_name_standard_list){
+		if (idol_icon[name]){
+			html += `
+			<div class="idol_menu_item">
+					<img
+						src="icons/${idol_icon[name].id}.jpg"
+						alt="${idol_icon[name].name}"
+						title="${idol_icon[name].name}"
+						style="width:${icon_size}px;border: medium solid #aaa;border-radius: 50%;"
+						onMouseOver="this.style.borderColor='${idol_icon[name].color}'"
+						onMouseOut="this.style.borderColor='#aaa'"
+						onClick="set_idol${num}('${idol_icon[name].name}');"
+					>
+			</div>`;
+		} else {
+			html += `
+			<div class="idol_menu_item">
+				<button type="button" class="btn btn-outline-secondary btn-sm" onClick="set_idol${num}('${name}');">${name}</button>
+			</div>`;
+		}
 
-				<img
-					src="icons/${idol_icon[name].id}.jpg"
-					alt="${idol_icon[name].name}"
-					title="${idol_icon[name].name}"
-					style="width:${icon_size}px;border: medium solid #aaa;border-radius: 50%;"
-					onMouseOver="this.style.borderColor='${idol_icon[name].color}'"
-					onMouseOut="this.style.borderColor='#aaa'"
-					onClick="set_idol${num}('${idol_icon[name].name}');"
-				>
-
-		</div>`;
-		appended_idol_list.push(idol_icon[name].name);
+		appended_idol_list.push(name);
 	}
-
+	/*
 	//アイコンがないメンバーを追加
 	const idol_names_from_data = get_person_list('idols');
 	for (let name of idol_names_from_data){
@@ -141,6 +145,7 @@ function init_idol_menu(num){
 			</div>`;
 		}
 	}
+	*/
 	//選択解除ボタン
 	html += `
 		<div class="idol_menu_item">
@@ -371,7 +376,7 @@ function update_tweets(stories){
         if (i > stories.length -1) break;
         html += `
         <div class="story -col-xl-3 -col-md-4 -col-sm-12 ">
-            <p><a target="_blank" href="${stories[i].url}"><span style="font-size:1.3em; font-weight: bold;">${stories[i].title}</span> <img src="open.png" style="width:1em; height:1em;"></a><br>${get_participated_idols_text(stories[i].idols)}</p>
+            <p><a target="_blank" href="${stories[i].url}"><span style="font-size:1.3em; font-weight: bold;">${stories[i].title}</span></a><br>${get_participated_idols_text(stories[i].idols)}</p>
             <blockquote class="twitter-tweet">
                 <a href="${stories[i].url}">#ミリシタ4コマ 公式ツイート</a>
             </blockquote>
@@ -453,8 +458,7 @@ const idol_names = `春香	天海春香
 小鳥	音無小鳥		
 美咲	青羽美咲		
 社長	高木順二朗	高木社長	
-げき子	劇場の魂	劇子	
-黒井社長	黒井崇男		
+プロデューサー	
 `;
 
 let idol_lines = idol_names.split('\n');
@@ -534,7 +538,11 @@ momoko	桃子	#efb864
 julia	ジュリア	#d7385f
 tsumugi	紬	#ebe1ff
 kaori	歌織	#274079
-
+kotori	小鳥	#F7E200
+misaki	美咲	#67C0C3
+producer	プロデューサー	#000
+takagi	社長	#000
+sora	そら	#3A547C
 `;
 	const lines = idol_icons_data.split('\n');
 	for (let line of lines){
