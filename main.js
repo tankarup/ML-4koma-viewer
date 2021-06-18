@@ -119,9 +119,21 @@ function init_idol_menu(num){
 						src="icons/${idol_icon[name].id}.jpg"
 						alt="${idol_icon[name].name}"
 						title="${idol_icon[name].name}"
-						style="width:${icon_size}px;border: medium solid #aaa;border-radius: 50%;"
-						onMouseOver="this.style.borderColor='${idol_icon[name].color}'"
-						onMouseOut="this.style.borderColor='#aaa'"
+						style="
+							width:${icon_size}px;
+							outline: 1px solid ${idol_icon[name].color};
+							outline-offset: -1px;
+							border-radius: 50%;"
+						onMouseOver="
+							this.style.outlineColor = '${idol_icon[name].color}';
+							this.style.outlineWidth = '6px';
+							this.style.outlineOffset = '-4px';
+							"
+						onMouseOut="
+							this.style.outlineColor='${idol_icon[name].color}';
+							this.style.outlineWidth='1px';
+							this.style.outlineOffset = '-1px';
+							"
 						onClick="set_idol${num}('${idol_icon[name].name}');"
 					>
 			</div>`;
@@ -337,12 +349,12 @@ function get_participated_idols_text(idols){
 	for (let name of idols){
 		if (idol_icon[name]) {
 			text += `
-			<img
-				src="icons/${idol_icon[name].id}.jpg"
-				alt="${idol_icon[name].name}"
-				title="${idol_icon[name].name}"
-				style="width:40px;border: 2px solid ${idol_icon[name].color};border-radius: 20%;"
-			>`;
+					<img
+						src="icons/${idol_icon[name].id}.jpg"
+						alt="${idol_icon[name].name}"
+						title="${idol_icon[name].name}"
+						style="height:40px;  border: 2px solid ${idol_icon[name].color};border-radius: 20%;"
+					>`;
 		} else {
 			text += ' ' + name;
 		}
@@ -457,6 +469,7 @@ const idol_names = `春香	天海春香
 歌織	桜守歌織		
 小鳥	音無小鳥		
 美咲	青羽美咲		
+そら
 社長	高木順二朗	高木社長	
 プロデューサー	
 `;
