@@ -520,35 +520,41 @@ for (let idol_from in likes){
 			max_like = like[idol_to];
 		}
 	}
-	for (let loved_idol of loved_idols){
-		edges.add({
-			from: idol_from,
-			to: loved_idol,
-			arrows: 'to',
-			value: max_like,
-			title: idol_from + '♡'.repeat(max_like) + loved_idol + ' (Click to open 4koma)',
-			color: {
-				color: '#aaa',
-				highlight: idol_attr[idol_from].color,
-			},
-			label: '♡'.repeat(max_like),
-			font: {
-				size: 0,
-			},
-			scaling: {
-				label: false,
-			},
-			chosen:{
-				label: function(values, id, selected, hovering) {
-					values.size = 20;
-					values.color = idol_attr[idol_from].color;
-				},
-				edge:   function(values, id, selected, hovering) {
-					values.color = idol_attr[idol_from].color;
-				},
-			},
+	for (let idol_to of idols){
+		
+		if (like[idol_to] == max_like){
+			const loved_idol = idol_to;
 
-		});
+			edges.add({
+				from: idol_from,
+				to: loved_idol,
+				arrows: 'to',
+				value: like[idol_to],
+				title: idol_from + '♡'.repeat(like[idol_to]) + loved_idol + ' (DBClick to open 4koma)',
+				color: {
+					color: '#aaa',
+					highlight: idol_attr[idol_from].color,
+				},
+				label: '♡'.repeat(like[idol_to]),
+				font: {
+					size: 0,
+				},
+				scaling: {
+					label: false,
+				},
+				chosen:{
+					label: function(values, id, selected, hovering) {
+						values.size = 20;
+						values.color = idol_attr[idol_from].color;
+					},
+					edge:   function(values, id, selected, hovering) {
+						values.color = idol_attr[idol_from].color;
+					},
+				},
+
+			});
+		}
+
 	}
 	
 }
@@ -582,7 +588,7 @@ for (let idol of idols){
 			max: 40,
 			min: 15,
 		},
-		title: idol + ' (Click to open 4koma)',
+		title: idol + ' (DBClick to open 4koma)',
 
 	});
 }
@@ -602,7 +608,7 @@ var options = {
 	interaction: interaction,
 };
 var network = new vis.Network(container, data, options);
-network.on('click', function(params){
+network.on('doubleClick', function(params){
 	console.log(params);
 	//ノードが選択されていた場合
 	if (params.nodes.length > 0){

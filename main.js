@@ -53,8 +53,12 @@ function getJsonp_GAS() {
                 const story = json[i];
                 if (story['タイトル'].length < 1) continue;
                 let idol = [];
-                //アイドルを追加
-                for (let j=0; j<7; j++){
+				//主役アイドルを追加
+				const main_idol = story['登場人物1'];
+				idol[0] = main_idol;
+
+				//脇役アイドルを追加
+                for (let j=1; j<7; j++){
                     const key = '登場人物' + (j+1);
                     if (story[key].length < 1) continue;
                     idol.push(story[key]);
@@ -112,6 +116,7 @@ function init_idol_menu(num){
 	let html = '';
 	html += ``;
 	for (let name of idol_name_standard_list){
+		//アイコン画像が登録されたアイドルは画像で表示
 		if (idol_icon[name]){
 			html += `
 			<div class="idol_menu_item">
@@ -123,7 +128,7 @@ function init_idol_menu(num){
 							width:${icon_size}px;
 							outline: 1px solid ${idol_icon[name].color};
 							outline-offset: -1px;
-							border-radius: 50%;"
+							border-radius: 40%;"
 						onMouseOver="
 							this.style.outlineColor = '${idol_icon[name].color}';
 							this.style.outlineWidth = '6px';
@@ -138,33 +143,23 @@ function init_idol_menu(num){
 					>
 			</div>`;
 		} else {
+			//アイコン画像がなかったらボタンテキスト表示
 			html += `
-			<div class="idol_menu_item">
+			<div  class="idol_menu_item">
 				<button type="button" class="btn btn-outline-secondary btn-sm" onClick="set_idol${num}('${name}');">${name}</button>
 			</div>`;
 		}
 
 		appended_idol_list.push(name);
 	}
-	/*
-	//アイコンがないメンバーを追加
-	const idol_names_from_data = get_person_list('idols');
-	for (let name of idol_names_from_data){
-		if (appended_idol_list.indexOf(name) == -1){
-			html += `
-			<div class="idol_menu_item">
-				<button type="button" class="btn btn-outline-secondary btn-sm" onClick="set_idol${num}('${name}');">${name}</button>
-			</div>`;
-		}
-	}
-	*/
+
 	//選択解除ボタン
 	html += `
-		<div class="idol_menu_item">
-			<button type="button" class="btn btn-warning" onClick="set_idol${num}('');">Clear</button>
+		<div class="idol_menu_item"  style="float:right;">
+			<button style="height:${icon_size-20}px; margin-top:20px;" type="button" class="btn btn-warning" onClick="set_idol${num}('');">Clear</button>
 		</div>`;
 	const menu = document.getElementById(`idol${num}_menu`);
-	menu.style.width = `${(icon_size + 4)* number_menu_columns + 2}px`;
+	menu.style.width = `${(icon_size + 4)* number_menu_columns + 2}px`; //メニュー幅を適当に調整した
 	menu.innerHTML = html;
 
 }
