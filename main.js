@@ -113,9 +113,12 @@ function get_person_list(key){
 
 function init_idol_menu(num){
 	let appended_idol_list = [];
+	const all_persons = idol_name_standard_list.concat(get_person_list('idols'));
+	console.log(all_persons);
 	let html = '';
 	html += ``;
-	for (let name of idol_name_standard_list){
+	for (let name of all_persons){
+		if (appended_idol_list.indexOf(name) > -1) continue;
 		//アイコン画像が登録されたアイドルは画像で表示
 		if (idol_icon[name]){
 			html += `
@@ -143,6 +146,7 @@ function init_idol_menu(num){
 					>
 			</div>`;
 		} else {
+			
 			//アイコン画像がなかったらボタンテキスト表示
 			html += `
 			<div  class="idol_menu_item">
