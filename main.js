@@ -555,6 +555,9 @@ misaki	美咲	#67C0C3
 producer	プロデューサー	#000
 takagi	社長	#000
 sora	そら	#3A547C
+sika	詩花	#C4CCAC
+leon	玲音	#281D35
+kuroi	黒井社長	#000
 `;
 	const lines = idol_icons_data.split('\n');
 	for (let line of lines){
