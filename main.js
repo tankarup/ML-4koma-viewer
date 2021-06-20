@@ -129,18 +129,24 @@ function init_idol_menu(num){
 						title="${idol_icon[name].name}"
 						style="
 							width:${icon_size}px;
-							outline: 1px solid ${idol_icon[name].color};
-							outline-offset: -1px;
+							aoutline: 1px solid ${idol_icon[name].color};
+							aoutline-offset: -1px;
+							border: 1px solid ${idol_icon[name].color};
 							border-radius: 40%;"
 						onMouseOver="
-							this.style.outlineColor = '${idol_icon[name].color}';
-							this.style.outlineWidth = '6px';
-							this.style.outlineOffset = '-4px';
+							//this.style.outlineColor = '${idol_icon[name].color}';
+							//this.style.outlineWidth = '6px';
+							//this.style.outlineOffset = '-4px';
+							//this.style.borderColor = '${idol_icon[name].color}';
+							//this.style.borderWidth = '6px';
+							//this.style.borderOffset = '-4px';
+							this.style.boxShadow = '0 0 3px 4px ${idol_icon[name].color}';
 							"
 						onMouseOut="
-							this.style.outlineColor='${idol_icon[name].color}';
-							this.style.outlineWidth='1px';
-							this.style.outlineOffset = '-1px';
+							//this.style.outlineColor='${idol_icon[name].color}';
+							//this.style.outlineWidth='1px';
+							//this.style.outlineOffset = '-1px';
+							this.style.boxShadow = '0 0 0 0px #fff';
 							"
 						onClick="set_idol${num}('${idol_icon[name].name}');"
 					>
@@ -555,8 +561,8 @@ misaki	美咲	#67C0C3
 producer	プロデューサー	#000
 takagi	社長	#000
 sora	そら	#3A547C
-sika	詩花	#C4CCAC
-leon	玲音	#281D35
+sika	詩花	#85AC84
+leon	玲音	#5A2B8D
 kuroi	黒井社長	#000
 `;
 	const lines = idol_icons_data.split('\n');
