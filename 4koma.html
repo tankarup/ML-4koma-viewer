@@ -133,7 +133,7 @@ ul.dropdown_nav li {
 
 	
     <nav class="navbar navbar-primary bg-primary text-light p-0" id="main_navbar">
-        <h1 class="h3">ミリシタ4コマビューア<div id="loading"><div class="dot dot1"></div><div class="dot dot2"></div><div class="dot dot3"></div><span id="loading_text">Loading...</span></div></h1>
+        <h1 class="h3">ミリシタ4コマ ビューア<div id="loading"><div class="dot dot1"></div><div class="dot dot2"></div><div class="dot dot3"></div><span id="loading_text">Loading...</span></div></h1>
         <div id="navigation">
             <button type="button" id="first_button" class="btn btn-primary">&lt;&lt;</button>
             <button type="button" id="prev_button" class="btn btn-primary">&lt;</button>
@@ -156,23 +156,25 @@ ul.dropdown_nav li {
             </select>
 			-->
 			<ul class="dropdown_nav">
-				
-				<li class="dropdown_container">
+				<div  class="dropdown_container" style="font-size:medium;" title="主役回のみ表示">
+					<div class="form-check"><input class="form-check-input" type="checkbox" id="main_only" value="">♛</div>
+					<!--<input type="checkbox" id="main_only" value="" style="display:inline-block"><br>主役回　　-->
+				</div>
+				<div class="dropdown_container">
 					<button type="button" class="btn btn-primary"><span id="idol1_name">アイドル1▼</span></button>
 					<div id="idol1_menu" class="popup"></div>
 					
-				</li>
-				<li class="dropdown_container" style="font-size: small;">
-					<div class="form-check"><input class="form-check-input" type="checkbox" id="main_only" value="" >主役回　　</div></li>
-				<li class="dropdown_container">
+				</div>
+
+				<div class="dropdown_container">
 					<button type="button" class="btn btn-primary"><span id="idol2_name">アイドル2▼</span></button>
 					<div id="idol2_menu" class="popup"></div>
-				</li>
-				<li class="dropdown_container">
+				</div>
+				<div class="dropdown_container">
 					<select id="drawers" class="form-select">
 						
 					</select>
-				</li>
+				</div>
 			</ul>
         </div>
 

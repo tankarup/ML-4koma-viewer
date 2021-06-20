@@ -58,7 +58,7 @@ function getJsonp_GAS() {
 				idol[0] = main_idol;
 
 				//脇役アイドルを追加
-                for (let j=1; j<7; j++){
+                for (let j=1; j<8; j++){
                     const key = '登場人物' + (j+1);
                     if (story[key].length < 1) continue;
                     idol.push(story[key]);
