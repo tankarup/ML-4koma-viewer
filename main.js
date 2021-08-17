@@ -7,7 +7,7 @@ let drawer_list = [];
 let idol1 = '';
 let idol2 = '';
 let drawer = '';
-let main_only = false;
+//let main_only = false;
 let page = 0;
 let viewing_koma = 0;
 let number_per_page = 4;
@@ -114,7 +114,7 @@ function get_person_list(key){
 function init_idol_menu(num){
 	let appended_idol_list = [];
 	const all_persons = idol_name_standard_list.concat(get_person_list('idols'));
-	console.log(all_persons);
+	//console.log(all_persons);
 	let html = '';
 	html += ``;
 	for (let name of all_persons){
@@ -229,7 +229,7 @@ function load_url_params(){
 
     idol1 = idol1_name ? idol1_name : '';
     idol2 = idol2_name ? idol2_name : '';
-	main_only = param_main_only ? param_main_only.toLocaleLowerCase() === 'true' : false;
+	const main_only = param_main_only ? param_main_only.toLocaleLowerCase() === 'true' : false;
 
 	set_idol1(idol1);
 	set_idol2(idol2);
@@ -260,8 +260,24 @@ function get_menu_idol_label(name){
 	}
 	return name;
 
-	return name;
 }
+
+function update_url(){
+	let params = [];
+	params[0] = idol1 ? `idol1=${idol1}`: '';
+	params[1] = idol2 ?  `idol2=${idol2}`: '';
+	const main_only = document.getElementById('main_only').checked;
+	params[2] = main_only ?  `main=${main_only}`: '';
+	const out1 = params.filter(function(value){
+		return value;
+	}).join('&');
+	const out2 = out1 ? `?${out1}` : '';
+
+	//console.log(params, main_only);
+
+	history.replaceState(null, null, '4koma.html' + out2);
+}
+
 function set_idol1(name){
 	document.getElementById('idol1_name').innerHTML = (name != '') ? get_menu_idol_label(name) : 'アイドル1▼';
 	idol1 = name;
@@ -325,6 +341,7 @@ document.getElementById('main_only').addEventListener('change', function(){
 function update_list(){
     current_list = filter_by_idols();
     update_tweets(current_list);
+	
 }
 
 function filter_by_idols(){
@@ -404,6 +421,8 @@ function update_tweets(stories){
 
     document.getElementById('whole').innerHTML = html;
     twttr.widgets.load();
+
+	update_url();
     
 }
 
