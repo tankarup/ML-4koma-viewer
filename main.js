@@ -4,9 +4,11 @@ let data = []; //全データ
 let current_list = []; //現在表示中のデータ
 let idol_list = [];
 let drawer_list = [];
+let series_list = [];
 let idol1 = '';
 let idol2 = '';
 let drawer = '';
+let series = '';
 //let main_only = false;
 let page = 0;
 let viewing_koma = 0;
@@ -75,10 +77,12 @@ function getJsonp_GAS() {
                         title: story['タイトル'],
                         idols: idol,
                         drawers: [story['作画']], //idolsと処理を同じにするために配列として保持。
+						series:[story['シリーズ']], //idolsと処理を同じにするために配列として保持。
                         url: story['URL'],
                     }
                 );
             }
+			//console.log(json);
             init_menu();
             load_url_params();
             current_list = data;
@@ -217,9 +221,15 @@ function init_menu(){
     for (let drawer of drawer_list){
         drawers_html += `<option value="${drawer}">${drawer}</option>`;
     }
-
     document.getElementById('drawers').innerHTML = '<option value="">作画</option>' + drawers_html;
 
+    //シリーズフィルターメニュー作成
+	series_list = get_person_list('series');
+    let series_html = '';
+    for (let series of series_list){
+        series_html += `<option value="${series}">${series}</option>`;
+    }
+    document.getElementById('series').innerHTML = '<option value="">シリーズ</option>' + series_html;
 }
 
 function load_url_params(){
@@ -310,6 +320,12 @@ document.getElementById('drawers').addEventListener('change', function(){
     viewing_koma = 0;
     update_list();
 });
+document.getElementById('series').addEventListener('change', function(){
+    series = this.value;
+    console.log(series);
+    viewing_koma = 0;
+    update_list();
+});
 
 document.getElementById('prev_button').addEventListener('click', function(){
 
@@ -346,6 +362,24 @@ function update_list(){
 
 function filter_by_idols(){
     let stories = [];
+	for (let story of data){
+		//アイドル2が設定されていて、登場リストになかったらスキップ
+		if (idol2 != '' && story.idols.indexOf(idol2) < 0 ) continue;
+
+		//作画担当が設定されていて、リストに無かったらスキップ
+		if (drawer != '' && story.drawers.indexOf(drawer) < 0 ) continue;
+
+		//シリーズが設定されていて、リストになかったらスキップ
+		if (series != '' && story.series.indexOf(series) < 0 ) continue;
+
+		//「主役のみ」がチェックされていたら、アイドル１で主役判定。アイドル２はゲスト回も表示
+		if (document.getElementById("main_only").checked){
+			if (story.idols.indexOf(idol1) == 0 || idol1 == '') stories.push(story);
+		} else {
+			if (story.idols.indexOf(idol1) >= 0 || idol1 == '') stories.push(story);
+		}
+	}
+	/*
 	//「主役のみ」がチェックされていたら、アイドル１で主役判定。アイドル２はゲスト回も表示
     if (document.getElementById("main_only").checked){
         for (let story of data){
@@ -360,6 +394,7 @@ function filter_by_idols(){
             }
         }
     }
+	*/
 
 
 
