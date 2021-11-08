@@ -51,6 +51,7 @@ function getJsonp_GAS() {
         dataType: 'jsonp',
         jsonpCallback: 'jsondata',
         success: function (json) {
+			let count = 1;
             for (let i = 0; i < json.length; i++){
                 const story = json[i];
                 if (story['タイトル'].length < 1) continue;
@@ -72,6 +73,7 @@ function getJsonp_GAS() {
                         idol.push(staff);
                     }
                 }
+
                 data.push(
                     {
                         title: story['タイトル'],
@@ -79,12 +81,15 @@ function getJsonp_GAS() {
                         drawers: [story['作画']], //idolsと処理を同じにするために配列として保持。
 						series:[story['シリーズ']], //idolsと処理を同じにするために配列として保持。
                         url: story['URL'],
+						number: count++,
                     }
                 );
             }
 			//console.log(json);
             init_menu();
             load_url_params();
+			//新しい話を先頭にする(配列を逆順にする)
+			data  = data.reverse();
             current_list = data;
             update_list();
 			document.getElementById('loading').style.display="none";
@@ -445,7 +450,7 @@ function update_tweets(stories){
         if (i > stories.length -1) break;
         html += `
         <div class="story -col-xl-3 -col-md-4 -col-sm-12 ">
-            <p><a target="_blank" href="${stories[i].url}"><span style="font-size:1.3em; font-weight: bold;">${stories[i].title}</span></a><br>${get_participated_idols_text(stories[i].idols)}</p>
+            <p>第${stories[i].number}話 <span style="font-size:1.3em; font-weight: bold;"><a target="_blank" href="${stories[i].url}">${stories[i].title}</a></span><br>${get_participated_idols_text(stories[i].idols)}</p>
             <blockquote class="twitter-tweet">
                 <a href="${stories[i].url}">#ミリシタ4コマ 公式ツイート</a>
             </blockquote>
