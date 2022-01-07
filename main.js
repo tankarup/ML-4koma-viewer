@@ -81,6 +81,7 @@ function getJsonp_GAS() {
                         drawers: [story['作画']], //idolsと処理を同じにするために配列として保持。
 						series:[story['シリーズ']], //idolsと処理を同じにするために配列として保持。
                         url: story['URL'],
+						img: story['img'],
 						number: count++,
                     }
                 );
@@ -451,6 +452,7 @@ function update_tweets(stories){
         html += `
         <div class="story -col-xl-3 -col-md-4 -col-sm-12 ">
             <p>第${stories[i].number}話 <span style="font-size:1.3em; font-weight: bold;"><a target="_blank" href="${stories[i].url}">${stories[i].title}</a></span><br>${get_participated_idols_text(stories[i].idols)}</p>
+			<p><img src="${stories[i].img}" style="width:100%;"></p>
             <blockquote class="twitter-tweet">
                 <a href="${stories[i].url}">#ミリシタ4コマ 公式ツイート</a>
             </blockquote>
