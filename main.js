@@ -451,7 +451,7 @@ function update_tweets(stories){
         if (i > stories.length -1) break;
         html += `
         <div class="story -col-xl-3 -col-md-4 -col-sm-12 ">
-            <p>第${stories[i].number}話 <span style="font-size:1.3em; font-weight: bold;"><a target="_blank" href="${stories[i].url}">${stories[i].title}</a></span><br>${get_participated_idols_text(stories[i].idols)}</p>
+            <p class="story_title">第${stories[i].number}話 <span style="font-size:1.3em; font-weight: bold;"><a target="_blank" href="${stories[i].url}" title="${stories[i].title}">${stories[i].title}</a></span><br>${get_participated_idols_text(stories[i].idols)}</p>
 			<p><img src="${stories[i].img}" style="width:100%;"></p>
             <blockquote class="twitter-tweet">
                 <a href="${stories[i].url}">#ミリシタ4コマ 公式ツイート</a>
