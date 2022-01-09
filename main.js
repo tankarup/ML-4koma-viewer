@@ -242,14 +242,20 @@ function load_url_params(){
     const idol1_name = getParam('idol1');
     const idol2_name = getParam('idol2');
 	const param_main_only = getParam('main');
+	const drawer_name = getParam('drawer');
+	const series_name = getParam('series');
 
     idol1 = idol1_name ? idol1_name : '';
     idol2 = idol2_name ? idol2_name : '';
 	const main_only = param_main_only ? param_main_only.toLocaleLowerCase() === 'true' : false;
+	drawer = drawer_name ? drawer_name : '';
+	series = series_name ? series_name : '';
 
 	set_idol1(idol1);
 	set_idol2(idol2);
 	document.getElementById('main_only').checked = main_only;
+	set_drawer(drawer);
+	set_series(series);
 	/*
     document.getElementById('idols1').value = idol1;
     document.getElementById('idols2').value = idol2;
@@ -284,6 +290,9 @@ function update_url(){
 	params[1] = idol2 ?  `idol2=${idol2}`: '';
 	const main_only = document.getElementById('main_only').checked;
 	params[2] = main_only ?  `main=${main_only}`: '';
+	params[3] = drawer ? `drawer=${drawer}` : '';
+	params[4] = series ? `series=${series}` : '';
+
 	const out1 = params.filter(function(value){
 		return value;
 	}).join('&');
@@ -303,6 +312,18 @@ function set_idol1(name){
 function set_idol2(name){
 	document.getElementById('idol2_name').innerHTML = (name != '') ? get_menu_idol_label(name) : 'アイドル2▼';
 	idol2 = name;
+	viewing_koma = 0;
+	update_list();
+}
+function set_drawer(name){
+	document.getElementById("drawers").value = name;
+	drawer = name;
+	viewing_koma = 0;
+	update_list();
+}
+function set_series(name){
+	document.getElementById("series").value = name;
+	series = name;
 	viewing_koma = 0;
 	update_list();
 }
@@ -450,7 +471,7 @@ function update_tweets(stories){
     for (var i = viewing_koma; i < viewing_koma + number_per_page; i++) {
         if (i > stories.length -1) break;
         html += `
-        <div class="story -col-xl-3 -col-md-4 -col-sm-12 ">
+        <div class="story -col-xl-3 -col-md-4 -col-sm-12 border border-secondary border-top-0">
             <p class="story_title">第${stories[i].number}話 <span style="font-size:1.3em; font-weight: bold;"><a target="_blank" href="${stories[i].url}" title="${stories[i].title}">${stories[i].title}</a></span><br>${get_participated_idols_text(stories[i].idols)}</p>
 			<p><img src="${stories[i].img}" style="width:100%;"></p>
             <blockquote class="twitter-tweet">
