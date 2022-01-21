@@ -303,6 +303,14 @@ function update_url(){
 	history.replaceState(null, null, '4koma.html' + out2);
 }
 
+function reset_parameters(){
+	set_idol1("");
+	set_idol2("");
+	set_drawer("");
+	set_series("");
+
+}
+
 function set_idol1(name){
 	document.getElementById('idol1_name').innerHTML = (name != '') ? get_menu_idol_label(name) : 'アイドル1▼';
 	idol1 = name;
