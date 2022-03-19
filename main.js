@@ -253,7 +253,7 @@ function load_url_params(){
 
 	set_idol1(idol1);
 	set_idol2(idol2);
-	document.getElementById('main_only').checked = main_only;
+	set_main_only(main_only);
 	set_drawer(drawer);
 	set_series(series);
 	/*
@@ -306,6 +306,7 @@ function update_url(){
 function reset_parameters(){
 	set_idol1("");
 	set_idol2("");
+	set_main_only(false);
 	set_drawer("");
 	set_series("");
 
@@ -320,6 +321,12 @@ function set_idol1(name){
 function set_idol2(name){
 	document.getElementById('idol2_name').innerHTML = (name != '') ? get_menu_idol_label(name) : 'アイドル2▼';
 	idol2 = name;
+	viewing_koma = 0;
+	update_list();
+}
+function set_main_only(main_only_param){
+	document.getElementById('main_only').checked = main_only_param;
+	main_only = main_only_param;
 	viewing_koma = 0;
 	update_list();
 }
