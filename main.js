@@ -493,12 +493,14 @@ function update_tweets(stories){
 		const html_inline_picture = `<p><img src="${stories[i].img}" style="width:100%; ${show_whole_picture ? '' : 'height:300px; object-fit:cover; object-position:0% 0%;'}"></p>`;
 
         html += `
-        <div class="story -col-xl-3 -col-md-4 -col-sm-12 border border-secondary border-top-0">
-            <p class="story_title">第${stories[i].number}話 <span style="font-size:1.3em; font-weight: bold;"><a target="_blank" href="${stories[i].url}" title="${stories[i].title}">${stories[i].title}</a></span><br>${get_participated_idols_text(stories[i].idols)}</p>
-			${html_inline_picture}
-            <blockquote class="twitter-tweet">
-                <a href="${stories[i].url}">#ミリシタ4コマ 公式ツイート</a>
-            </blockquote>
+        <div class="story -col-xl-3 -col-md-4 -col-sm-12">
+			<div style="border:0px solid #92cfbb; box-shadow: 4px 4px 4px gray; border-radius:6px; padding:3px;">
+				<p class="story_title">第${stories[i].number}話 <span style="font-size:1.3em; font-weight: bold;"><a target="_blank" href="${stories[i].url}" title="${stories[i].title}">${stories[i].title}</a></span><br>${get_participated_idols_text(stories[i].idols)}</p>
+				${html_inline_picture}
+				<blockquote class="twitter-tweet">
+					<a href="${stories[i].url}">#ミリシタ4コマ 公式ツイート</a>
+				</blockquote>
+			</div>
         </div>`;
 
     }
