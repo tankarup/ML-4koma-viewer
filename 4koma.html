@@ -6,8 +6,11 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>ミリシタ4コマ検索</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
-	<link href="https://cdn.jsdelivr.net/gh/geedmo/yamm@4.0.0/dist/yamm.min.css" rel="stylesheet">
+    <!-- JavaScript Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<!-- CSS only -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
     <link rel="stylesheet" href="https://tankarup.github.io/million.css">
     <style>
         #whole {
@@ -20,12 +23,13 @@
             
             //margin: 5px;
 			padding: 5px;
-            width: 300px;
+            //width: 300px;
             max-width: 100%;
 			//border: 1px solid #aaa;
             
         }
-        #navigation {
+        .navigation {
+			margin: 0 auto;
             //display: inline-block;
             //font-weight:bold;
         }
@@ -83,7 +87,9 @@
 	transform: scale(1);
   }
 }
-ul.dropdown_nav,
+ul.dropdown_nav{
+	margin: 0 ;
+}
 ul.dropdown_nav li {
     list-style: none;
     margin: 0;
@@ -126,7 +132,9 @@ ul.dropdown_nav li {
 	float: left;
 	margin: 2px;
 }
-
+iframe, .twitter-tweet  {
+	max-width:100%;
+}
 /*
 .dropdown_container:hover  .popup{
     display: inline-block;
@@ -141,12 +149,12 @@ ul.dropdown_nav li {
 	
     <nav class="navbar navbar-primary bg-primary text-light p-0" id="main_navbar">
         <h1 class="h3"><span onclick="reset_parameters();" style="cursor:pointer;">ミリシタ4コマ検索</span><div id="loading"><div class="dot dot1"></div><div class="dot dot2"></div><div class="dot dot3"></div><span id="loading_text">Loading...</span></div></h1>
-        <div id="navigation">
-            <button type="button" id="first_button" class="btn btn-primary">&lt;&lt;</button>
-            <button type="button" id="prev_button" class="btn btn-primary">&lt;</button>
-            <span id="pages">**/**</span>
-            <button type="button" id="next_button" class="btn btn-primary">&gt;</button>
-            <button type="button" id="last_button" class="btn btn-primary">&gt;&gt;</button>
+        <div class="navigation">
+            <button type="button" id="" class="first_button btn btn-primary">&lt;&lt;</button>
+            <button type="button" id="" class="prev_button btn btn-primary">&lt;</button>
+            <span class="pages">**/**</span>
+            <button type="button" id="" class="next_button btn btn-primary">&gt;</button>
+            <button type="button" id="" class="last_button btn btn-primary">&gt;&gt;</button>
         </div>
         <div >
 			<!--
@@ -199,10 +207,21 @@ ul.dropdown_nav li {
         </div>
 
     </nav>
-
-    <div id="whole">
+	<div class="container-fluid">
+    <div id="whole" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 row-cols-xxl-6">
         <!-- // -->
     </div>
+	</div>
+	<nav class="navbar navbar-primary bg-primary text-light p-0" id="foot_navbar">
+		<div class="navigation">
+			<button type="button" id="" class="first_button btn btn-primary">&lt;&lt;</button>
+			<button type="button" id="" class="prev_button btn btn-primary">&lt;</button>
+			<span class="pages">**/**</span>
+			<button type="button" id="" class="next_button btn btn-primary">&gt;</button>
+			<button type="button" id="" class="last_button btn btn-primary">&gt;&gt;</button>
+		</div>
+	</nav>
+
     <div id="informations" class="small">
 		
         <ul>

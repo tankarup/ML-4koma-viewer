@@ -369,26 +369,33 @@ document.getElementById('series').addEventListener('change', function(){
     update_list();
 });
 
-document.getElementById('prev_button').addEventListener('click', function(){
 
-    viewing_koma = viewing_koma - number_per_page;
-    if (viewing_koma < 0) viewing_koma = 0;
-    update_tweets(current_list);
+document.querySelectorAll('.prev_button').forEach(function(elem){
+	elem.addEventListener('click', function(){
+		viewing_koma = viewing_koma - number_per_page;
+		if (viewing_koma < 0) viewing_koma = 0;
+		update_tweets(current_list);
+	})
 });
-document.getElementById('next_button').addEventListener('click', function(){
-    viewing_koma = viewing_koma + number_per_page;
-    if (viewing_koma + number_per_page > current_list.length-1) viewing_koma = current_list.length - number_per_page;
-    update_tweets(current_list);
+document.querySelectorAll('.next_button').forEach(function(elem){
+	elem.addEventListener('click', function(){
+		viewing_koma = viewing_koma + number_per_page;
+		if (viewing_koma + number_per_page > current_list.length-1) viewing_koma = current_list.length - number_per_page;
+		update_tweets(current_list);
+	})
 });
-document.getElementById('first_button').addEventListener('click', function(){
 
-    viewing_koma = 0;
-    update_tweets(current_list);
+document.querySelectorAll('.first_button').forEach(function(elem){
+	elem.addEventListener('click', function(){
+		viewing_koma = 0;
+		update_tweets(current_list);
+	})
 });
-document.getElementById('last_button').addEventListener('click', function(){
-
-    viewing_koma = current_list.length - number_per_page;
-    update_tweets(current_list);
+document.querySelectorAll('.last_button').forEach(function(elem){
+	elem.addEventListener('click', function(){
+		viewing_koma = current_list.length - number_per_page;
+		update_tweets(current_list);
+	})
 });
 
 document.getElementById('main_only').addEventListener('change', function(){
@@ -482,7 +489,7 @@ function update_tweets(stories){
         $('#next_button').prop('disabled', false);
         $('#last_button').prop('disabled', false);
     }
-    $('#pages').text(`${viewing_koma+1}-${Math.min(viewing_koma+number_per_page, stories.length)}/${stories.length}`);
+    $('.pages').text(`${viewing_koma+1}-${Math.min(viewing_koma+number_per_page, stories.length)}/${stories.length}`);
 
     let html = '';
     //html += '<div class="container"><div class="row">';
@@ -493,7 +500,7 @@ function update_tweets(stories){
 		const html_inline_picture = `<p><img src="${stories[i].img}" style="width:100%; ${show_whole_picture ? '' : 'height:300px; object-fit:cover; object-position:0% 0%;'}"></p>`;
 
         html += `
-        <div class="story -col-xl-3 -col-md-4 -col-sm-12">
+        <div class="story">
 			<div style="border:0px solid #92cfbb; box-shadow: 4px 4px 4px gray; border-radius:6px; padding:3px;">
 				<p class="story_title">第${stories[i].number}話 <span style="font-size:1.3em; font-weight: bold;"><a target="_blank" href="${stories[i].url}" title="${stories[i].title}">${stories[i].title}</a></span><br>${get_participated_idols_text(stories[i].idols)}</p>
 				${html_inline_picture}
