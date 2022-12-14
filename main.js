@@ -22,10 +22,9 @@ window.onload = function () {
     getJsonp_GAS();
 
 	
-
-    if (screen.width > 700){
+	//スクリーンサイズによってアイドル選択メニューを調整
+    if (screen.width >= 768){
 		icon_size = 64;
-		number_per_page = 6;
 		number_menu_columns = 6;
 
 		document.getElementById("main_navbar").classList.add("sticky-top");
@@ -35,10 +34,22 @@ window.onload = function () {
 			popup.style.maxWidth = '1000px';
 		}
 	}
-    //PCの場合は表示数を10に増やす
-    if (screen.width > 1000){
-		number_per_page = 12;
+    if (screen.width >= 1200){
 		number_menu_columns = 8;
+	}
+	//スクリーンサイズによってページあたりの4コマ表示数を調整
+	number_per_page = 4;
+    if (screen.width >= 768){
+		number_per_page = 6;
+	}
+    if (screen.width >= 992){
+		number_per_page = 8;
+	}
+    if (screen.width >= 1200){
+		number_per_page = 10;
+	}
+	if (screen.width >= 1400){
+		number_per_page = 12;
 	}
 
 
