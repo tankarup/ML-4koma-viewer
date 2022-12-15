@@ -74,11 +74,15 @@ function getJsonp_GAS() {
 				//脇役アイドルを追加
                 for (let j=1; j<8; j++){
                     const key = '登場人物' + (j+1);
-                    if (story[key].length < 1) continue;
-                    idol.push(story[key]);
+					idol = idol.concat(story[key].split(/\s*[,、]\s*/));//カンマ区切りで複数のアイドルに分割し、名前の前後に入っている空白は削除する
                 }
+				//ちょい役アイドルを追加
+				const referreds = story['言及'].split(/\s*[,、]\s*/);//カンマ区切りで複数のアイドルに分割し、名前の前後に入っている空白は削除する
+
+
                 //社長、プロデューサー、そらさんを追加
-                const staffs = ['社長', 'プロデューサー', 'そら'];
+				//いずれ消す
+                const staffs = [];
                 for (let staff of staffs){
                     if (story[staff] != ''){
                         idol.push(staff);
@@ -89,6 +93,7 @@ function getJsonp_GAS() {
                     {
                         title: story['タイトル'],
                         idols: idol,
+						referreds: referreds,
                         drawers: [story['作画']], //idolsと処理を同じにするために配列として保持。
 						series:[story['シリーズ']], //idolsと処理を同じにするために配列として保持。
                         url: story['URL'],
@@ -427,8 +432,9 @@ function update_list(){
 function filter_by_idols(){
     let stories = [];
 	for (let story of data){
+		const all_idols = story.idols.concat(story.referreds);
 		//アイドル2が設定されていて、登場リストになかったらスキップ
-		if (idol2 != '' && story.idols.indexOf(idol2) < 0 ) continue;
+		if (idol2 != '' && all_idols.indexOf(idol2) < 0 ) continue;
 
 		//作画担当が設定されていて、リストに無かったらスキップ
 		if (drawer != '' && story.drawers.indexOf(drawer) < 0 ) continue;
@@ -438,34 +444,16 @@ function filter_by_idols(){
 
 		//「主役のみ」がチェックされていたら、アイドル１で主役判定。アイドル２はゲスト回も表示
 		if (document.getElementById("main_only").checked){
-			if (story.idols.indexOf(idol1) == 0 || idol1 == '') stories.push(story);
+			if (all_idols.indexOf(idol1) == 0 || idol1 == '') stories.push(story);
 		} else {
-			if (story.idols.indexOf(idol1) >= 0 || idol1 == '') stories.push(story);
+			if (all_idols.indexOf(idol1) >= 0 || idol1 == '') stories.push(story);
 		}
 	}
-	/*
-	//「主役のみ」がチェックされていたら、アイドル１で主役判定。アイドル２はゲスト回も表示
-    if (document.getElementById("main_only").checked){
-        for (let story of data){
-            if ((story.idols.indexOf(idol1) == 0 || idol1 == '') && (story.idols.indexOf(idol2) >= 0 || idol2 == '') && (story.drawers.indexOf(drawer) >= 0 || drawer == '')){
-                stories.push(story);
-            }
-        }
-    } else {
-        for (let story of data){
-            if ((story.idols.indexOf(idol1) >= 0 || idol1 == '') && (story.idols.indexOf(idol2) >= 0 || idol2 == '') && (story.drawers.indexOf(drawer) >= 0 || drawer == '')){
-                stories.push(story);
-            }
-        }
-    }
-	*/
-
-
 
     return stories;
 }
 
-function get_participated_idols_text(idols){
+function get_participated_idols_text(idols, class_str=""){
 	let text = '';
 	for (let name of idols){
 		if (idol_icon[name]) {
@@ -475,6 +463,7 @@ function get_participated_idols_text(idols){
 						alt="${idol_icon[name].name}"
 						title="${idol_icon[name].name}"
 						style="height:40px;  border: 2px solid ${idol_icon[name].color};border-radius: 20%;"
+						class="${class_str}"
 					>`;
 		} else {
 			text += ' ' + name;
@@ -513,7 +502,7 @@ function update_tweets(stories){
         html += `
         <div class="story">
 			<div style="border:0px solid #92cfbb; box-shadow: 4px 4px 4px gray; border-radius:6px; padding:3px;">
-				<p class="story_title">第${stories[i].number}話 <span style="font-size:1.3em; font-weight: bold;"><a target="_blank" href="${stories[i].url}" title="${stories[i].title}">${stories[i].title}</a></span><br>${get_participated_idols_text(stories[i].idols)}</p>
+				<p class="story_title">第${stories[i].number}話 <span style="font-size:1.3em; font-weight: bold;"><a target="_blank" href="${stories[i].url}" title="${stories[i].title}">${stories[i].title}</a></span><br>${get_participated_idols_text(stories[i].idols)}${get_participated_idols_text(stories[i].referreds, "referred")}</p>
 				${html_inline_picture}
 				<blockquote class="twitter-tweet">
 					<a href="${stories[i].url}">#ミリシタ4コマ 公式ツイート</a>
