@@ -41,16 +41,16 @@ window.onload = function () {
 	//スクリーンサイズによってページあたりの4コマ表示数を調整
 	number_per_page = 4;
     if (width >= 768){
-		number_per_page = 6;
+		number_per_page = 3;
 	}
     if (width >= 992){
-		number_per_page = 8;
+		number_per_page = 4;
 	}
     if (width >= 1200){
-		number_per_page = 10;
+		number_per_page = 5;
 	}
 	if (width >= 1400){
-		number_per_page = 12;
+		number_per_page = 6;
 	}
 
 
