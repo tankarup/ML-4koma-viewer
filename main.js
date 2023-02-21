@@ -90,18 +90,22 @@ function getJsonp_GAS() {
                     }
                 }
 
-                data.push(
-                    {
-                        title: story['タイトル'],
-                        idols: idol,
-						referreds: referreds,
-                        drawers: [story['作画']], //idolsと処理を同じにするために配列として保持。
-						series:[story['シリーズ']], //idolsと処理を同じにするために配列として保持。
-                        url: story['URL'],
-						img: story['img'],
-						number: count++,
-                    }
-                );
+				let new_item = {
+					title: story['タイトル'],
+					idols: idol,
+					referreds: referreds,
+					drawers: [story['作画']], //idolsと処理を同じにするために配列として保持。
+					series:[story['シリーズ']], //idolsと処理を同じにするために配列として保持。
+					url: story['URL'],
+					img: story['img'],
+					number: count++,
+					voice_url: story['アフレコ'],
+				};
+				if (new_item.voice_url.length > 0) {
+					new_item.series.push('🎤アフレコ');
+				}
+                data.push(new_item);
+
             }
 			//console.log(json);
             init_menu();
@@ -499,11 +503,12 @@ function update_tweets(stories){
     for (var i = viewing_koma; i < viewing_koma + number_per_page; i++) {
         if (i > stories.length -1) break;
 		const html_inline_picture = `<p><img src="${stories[i].img}" style="width:100%; ${show_whole_picture ? '' : 'height:300px; object-fit:cover; object-position:0% 0%;'}"></p>`;
+		const html_inline_voice_link = stories[i].voice_url ? `<a href="${stories[i].voice_url}" target="_blank">🎤</a>` : '';
 
         html += `
         <div class="story">
 			<div style="border:0px solid #92cfbb; box-shadow: 4px 4px 4px gray; border-radius:6px; padding:3px;">
-				<p class="story_title">第${stories[i].number}話 <span style="font-size:1.3em; font-weight: bold;"><a target="_blank" href="${stories[i].url}" title="${stories[i].title}">${stories[i].title}</a></span><br>${get_participated_idols_text(stories[i].idols)}${get_participated_idols_text(stories[i].referreds, "referred")}</p>
+				<p class="story_title">${html_inline_voice_link}No.${stories[i].number}.<span style="font-size:1.3em; font-weight: bold;"><a target="_blank" href="${stories[i].url}" title="${stories[i].title}">${stories[i].title}</a></span><br>${get_participated_idols_text(stories[i].idols)}${get_participated_idols_text(stories[i].referreds, "referred")}</p>
 				${html_inline_picture}
 				<blockquote class="twitter-tweet">
 					<a href="${stories[i].url}">#ミリシタ4コマ 公式ツイート</a>
