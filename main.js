@@ -390,19 +390,24 @@ document.getElementById('series').addEventListener('change', function(){
     update_list();
 });
 
-
+function goPrev(){
+	viewing_koma = viewing_koma - number_per_page;
+	if (viewing_koma < 0) viewing_koma = 0;
+	update_tweets(current_list);
+}
+function goNext(){
+	viewing_koma = viewing_koma + number_per_page;
+	if (viewing_koma + number_per_page > current_list.length-1) viewing_koma = current_list.length - number_per_page;
+	update_tweets(current_list);
+}
 document.querySelectorAll('.prev_button').forEach(function(elem){
 	elem.addEventListener('click', function(){
-		viewing_koma = viewing_koma - number_per_page;
-		if (viewing_koma < 0) viewing_koma = 0;
-		update_tweets(current_list);
+		goPrev();
 	})
 });
 document.querySelectorAll('.next_button').forEach(function(elem){
 	elem.addEventListener('click', function(){
-		viewing_koma = viewing_koma + number_per_page;
-		if (viewing_koma + number_per_page > current_list.length-1) viewing_koma = current_list.length - number_per_page;
-		update_tweets(current_list);
+		goNext();
 	})
 });
 
@@ -426,6 +431,19 @@ document.getElementById('main_only').addEventListener('change', function(){
 document.getElementById('show_whole_picture').addEventListener('change', function(){
 
     update_list();
+});
+
+//キーボードの矢印でページ移動
+document.addEventListener('keyup', function(e){
+	//console.log(e);
+	switch (e.key){
+		case 'ArrowRight':
+			goNext();
+			break;
+		case 'ArrowLeft':
+			goPrev();
+			break;
+	};
 });
 
 function update_list(){
@@ -508,7 +526,7 @@ function update_tweets(stories){
         html += `
         <div class="story">
 			<div style="border:0px solid #92cfbb; box-shadow: 4px 4px 4px gray; border-radius:6px; padding:3px;">
-				<p class="story_title">${html_inline_voice_link}No.${stories[i].number}.<span style="font-size:1.3em; font-weight: bold;"><a target="_blank" href="${stories[i].url}" title="${stories[i].title}">${stories[i].title}</a></span><br>${get_participated_idols_text(stories[i].idols)}${get_participated_idols_text(stories[i].referreds, "referred")}</p>
+				<p class="story_title">${html_inline_voice_link}No.${stories[i].number} <span style="font-size:1.3em; font-weight: bold;"><a target="_blank" href="${stories[i].url}" title="${stories[i].title}">${stories[i].title}</a></span><br>${get_participated_idols_text(stories[i].idols)}${get_participated_idols_text(stories[i].referreds, "referred")}</p>
 				${html_inline_picture}
 				<blockquote class="twitter-tweet">
 					<a href="${stories[i].url}">#ミリシタ4コマ 公式ツイート</a>
