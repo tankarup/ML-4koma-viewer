@@ -531,8 +531,10 @@ function update_tweets(stories){
 				<p
 					class="story_title"
 					title="タイトル：${stories[i].title}
-出演：${stories[i].idols.filter(v => v).join(',')}
-言及：${stories[i].referreds.filter(v => v).join(',')}
+主演：${stories[i].idols[0]}
+共演：${stories[i].idols.slice(1).filter(v => v).join(',')}
+ちょい役：${stories[i].referreds.filter(v => v).join(',')}
+シリーズ：${stories[i].series[0]}
 作画：${stories[i].drawers[0]}"
 				>
 					${html_inline_voice_link}No.${stories[i].number} <span style="font-size:1.3em; font-weight: bold;"><a target="_blank" href="${stories[i].url}" title="${stories[i].title}">${stories[i].title}</a></span><br>
