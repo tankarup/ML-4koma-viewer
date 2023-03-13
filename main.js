@@ -528,7 +528,16 @@ function update_tweets(stories){
         html += `
         <div class="story">
 			<div style="border:0px solid #92cfbb; box-shadow: 4px 4px 4px gray; border-radius:6px; padding:3px;">
-				<p class="story_title">${html_inline_voice_link}No.${stories[i].number} <span style="font-size:1.3em; font-weight: bold;"><a target="_blank" href="${stories[i].url}" title="${stories[i].title}">${stories[i].title}</a></span><br>${get_participated_idols_text(stories[i].idols)}${get_participated_idols_text(stories[i].referreds, "referred")}</p>
+				<p
+					class="story_title"
+					title="タイトル：${stories[i].title}
+出演：${stories[i].idols.filter(v => v).join(',')}
+言及：${stories[i].referreds.filter(v => v).join(',')}
+作画：${stories[i].drawers[0]}"
+				>
+					${html_inline_voice_link}No.${stories[i].number} <span style="font-size:1.3em; font-weight: bold;"><a target="_blank" href="${stories[i].url}" title="${stories[i].title}">${stories[i].title}</a></span><br>
+					<span>${get_participated_idols_text(stories[i].idols)}${get_participated_idols_text(stories[i].referreds, "referred")}</span>
+				</p>
 				${html_inline_picture}
 				<blockquote class="twitter-tweet">
 					<a href="${stories[i].url}">#ミリシタ4コマ 公式ツイート</a>
