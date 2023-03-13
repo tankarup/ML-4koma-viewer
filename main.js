@@ -486,7 +486,6 @@ function get_participated_idols_text(idols, class_str=""){
 					<img
 						src="icons/${idol_icon[name].id}.jpg"
 						alt="${idol_icon[name].name}"
-						title="${idol_icon[name].name}"
 						style="height:40px;  border: 2px solid ${idol_icon[name].color};border-radius: 20%;"
 						class="${class_str}"
 					>`;
@@ -522,7 +521,7 @@ function update_tweets(stories){
 
     for (var i = viewing_koma; i < viewing_koma + number_per_page; i++) {
         if (i > stories.length -1) break;
-		const html_inline_picture = `<p><img src="${stories[i].img}" style="width:100%; ${show_whole_picture ? '' : 'height:300px; object-fit:cover; object-position:0% 0%;'}"></p>`;
+		const html_inline_picture = `<p><img alt="${stories[i].title}" src="${stories[i].img}" style="width:100%; ${show_whole_picture ? '' : 'height:300px; object-fit:cover; object-position:0% 0%;'}"></p>`;
 		const html_inline_voice_link = stories[i].voice_url ? `<a href="${stories[i].voice_url}" target="_blank">🎤</a>` : '';
 
         html += `
