@@ -381,12 +381,14 @@ document.getElementById('drawers').addEventListener('change', function(){
     drawer = this.value;
     console.log(drawer);
     viewing_koma = 0;
+	this.blur();//左右矢印でページを移動するが、メニューにフォーカスが残っていると選択項目も変わってしまうため。
     update_list();
 });
 document.getElementById('series').addEventListener('change', function(){
     series = this.value;
     console.log(series);
     viewing_koma = 0;
+	this.blur();//左右矢印でページを移動するが、メニューにフォーカスが残っていると選択項目も変わってしまうため。
     update_list();
 });
 
