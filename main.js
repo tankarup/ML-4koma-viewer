@@ -101,7 +101,7 @@ function getJsonp_GAS() {
 					img: story['img'],
 					number: count++,
 					voice_url: story['アフレコ'],
-					keywords: story['キーワード'].split(/\s*[,、]\s*/), //カンマ区切りで分割し、前後に入っている空白は削除する
+					keywords: story['キーワード'].split(/[,、]/).map(v => v.trim()), //カンマ区切りで分割し、前後に入っている空白は削除する
 				};
 				if (new_item.voice_url.length > 0) {
 					new_item.series.push('🎤アフレコ');
@@ -132,7 +132,7 @@ function get_person_list(key){
         return self.indexOf(x) === i;
     });
     //空白除去
-    person_list = person_list.filter(n => n);
+    person_list = person_list.filter(n => n).map((v) => v.trim());
 
     //ソート
     person_list.sort(function(a,b){
