@@ -5,10 +5,12 @@ let current_list = []; //現在表示中のデータ
 let idol_list = [];
 let drawer_list = [];
 let series_list = [];
+let keywords_list = [];
 let idol1 = '';
 let idol2 = '';
 let drawer = '';
 let series = '';
+let keywords = '';
 //let main_only = false;
 let page = 0;
 let viewing_koma = 0;
@@ -80,7 +82,6 @@ function getJsonp_GAS() {
 				//ちょい役アイドルを追加
 				const referreds = story['言及'].split(/\s*[,、]\s*/);//カンマ区切りで複数のアイドルに分割し、名前の前後に入っている空白は削除する
 
-
                 //社長、プロデューサー、そらさんを追加
 				//いずれ消す
                 const staffs = [];
@@ -100,6 +101,7 @@ function getJsonp_GAS() {
 					img: story['img'],
 					number: count++,
 					voice_url: story['アフレコ'],
+					keywords: story['キーワード'].split(/\s*[,、]\s*/), //カンマ区切りで分割し、前後に入っている空白は削除する
 				};
 				if (new_item.voice_url.length > 0) {
 					new_item.series.push('🎤アフレコ');
@@ -257,6 +259,14 @@ function init_menu(){
         series_html += `<option value="${series}">${series}</option>`;
     }
     document.getElementById('series').innerHTML = '<option value="">シリーズ</option>' + series_html;
+
+	//キーワードフィルターメニュー作成
+	keywords_list = get_person_list('keywords');
+	let keywords_html = '';
+	for (let keywords of keywords_list){
+		keywords_html += `<option value="${keywords}">${keywords}</option>`;
+	}
+	document.getElementById('keywords').innerHTML = '<option value="">キーワード</option>' + keywords_html;
 }
 
 function load_url_params(){
@@ -330,6 +340,7 @@ function reset_parameters(){
 	set_main_only(false);
 	set_drawer("");
 	set_series("");
+	set_keywords("");
 
 }
 
@@ -363,6 +374,12 @@ function set_series(name){
 	viewing_koma = 0;
 	update_list();
 }
+function set_keywords(name){
+	document.getElementById("keywords").value = name;
+	keywords = name;
+	viewing_koma = 0;
+	update_list();
+}
 /*
 document.getElementById('idols1').addEventListener('change', function(){
     idol1 = this.value;
@@ -387,6 +404,13 @@ document.getElementById('drawers').addEventListener('change', function(){
 document.getElementById('series').addEventListener('change', function(){
     series = this.value;
     console.log(series);
+    viewing_koma = 0;
+	this.blur();//左右矢印でページを移動するが、メニューにフォーカスが残っていると選択項目も変わってしまうため。
+    update_list();
+});
+document.getElementById('keywords').addEventListener('change', function(){
+    keywords = this.value;
+    console.log(keywords);
     viewing_koma = 0;
 	this.blur();//左右矢印でページを移動するが、メニューにフォーカスが残っていると選択項目も変わってしまうため。
     update_list();
@@ -466,6 +490,9 @@ function filter_by_idols(){
 
 		//シリーズが設定されていて、リストになかったらスキップ
 		if (series != '' && story.series.indexOf(series) < 0 ) continue;
+
+		//キーワードが設定されていて、リストになかったらスキップ
+		if (keywords != '' && story.keywords.indexOf(keywords) < 0 ) continue;
 
 		//「主役のみ」がチェックされていたら、アイドル１で主役判定。アイドル２はゲスト回も表示
 		if (document.getElementById("main_only").checked){
