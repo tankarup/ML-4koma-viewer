@@ -186,11 +186,13 @@ function init_idol_menu(num){
 			</div>`;
 		} else {
 			
-			//アイコン画像がなかったらボタンテキスト表示
+			//アイコン画像がなかったらボタンテキスト表示→表示しない
+			/*
 			html += `
 			<div  class="idol_menu_item">
 				<button type="button" class="btn btn-outline-secondary btn-sm" onClick="set_idol${num}('${name}');">${name}</button>
 			</div>`;
+			*/
 		}
 
 		appended_idol_list.push(name);
