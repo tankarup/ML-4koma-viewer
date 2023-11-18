@@ -519,7 +519,8 @@ function get_participated_idols_text(idols, class_str=""){
 						class="${class_str}"
 					>`;
 		} else {
-			text += ' ' + name;
+			//text += ' ' + name;
+			//標準キャラ以外はリストに入れないことにする
 		}
 	}
 	return text;
