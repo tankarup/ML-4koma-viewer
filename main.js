@@ -18,6 +18,37 @@ let number_per_page = 4;
 let number_menu_columns = 3;
 let icon_size = 64;
 
+class Favs {
+	constructor(items){
+		this.favs = new Set(items);
+	}
+	add(item){
+		this.favs.add(item);
+		this.save();
+	}
+	delete(item){
+		this.favs.delete(item);
+		this.save();
+	}
+	has(item){
+		return this.favs.has(item);
+	}
+	values(){
+		return this.favs.values();
+	}
+	entries(){
+		return this.favs.entries();
+	}
+	load(){
+		this.favs = new Set(JSON.parse(localStorage.getItem('4koma_favs')));
+	}
+	save(){
+		localStorage.setItem('4koma_favs', JSON.stringify(Array.from(this.favs)));
+	}
+}
+const favs = new Favs();
+favs.load();
+
 // ページ読み込み後の処理
 window.onload = function () {
     // 【main-script】 を実行
@@ -91,6 +122,10 @@ function getJsonp_GAS() {
                     }
                 }
 
+				//idとして、Twitter画像の文字列を使用する
+				const match = story['img'].match(/media\/([^\?/]+)/);
+				const id = match[1];
+
 				let new_item = {
 					title: story['タイトル'],
 					idols: idol,
@@ -102,6 +137,7 @@ function getJsonp_GAS() {
 					number: count++,
 					voice_url: story['アフレコ'],
 					keywords: story['キーワード'].split(/[,、]/).map(v => v.trim()), //カンマ区切りで分割し、前後に入っている空白は削除する
+					id: id,
 				};
 				if (new_item.voice_url.length > 0) {
 					new_item.series.push('🎤アフレコ');
@@ -417,7 +453,17 @@ document.getElementById('keywords').addEventListener('change', function(){
 	this.blur();//左右矢印でページを移動するが、メニューにフォーカスが残っていると選択項目も変わってしまうため。
     update_list();
 });
-
+document.getElementById('main_only').addEventListener('change', function(){
+	viewing_koma = 0;
+    update_list();
+});
+document.getElementById('show_whole_picture').addEventListener('change', function(){
+    update_list();
+});
+document.getElementById('fav_only').addEventListener('change', function(){
+	viewing_koma = 0;
+    update_list();
+});
 function goPrev(){
 	viewing_koma = viewing_koma - number_per_page;
 	if (viewing_koma < 0) viewing_koma = 0;
@@ -425,7 +471,9 @@ function goPrev(){
 }
 function goNext(){
 	viewing_koma = viewing_koma + number_per_page;
-	if (viewing_koma + number_per_page > current_list.length-1) viewing_koma = current_list.length - number_per_page;
+
+	//最後尾に移動したときに、画面いっぱいに4コマを表示する
+	//if (viewing_koma + number_per_page > current_list.length-1) viewing_koma = current_list.length - number_per_page;
 	update_tweets(current_list);
 }
 document.querySelectorAll('.prev_button').forEach(function(elem){
@@ -452,14 +500,7 @@ document.querySelectorAll('.last_button').forEach(function(elem){
 	})
 });
 
-document.getElementById('main_only').addEventListener('change', function(){
 
-    update_list();
-});
-document.getElementById('show_whole_picture').addEventListener('change', function(){
-
-    update_list();
-});
 
 //キーボードの矢印でページ移動
 document.addEventListener('keyup', function(e){
@@ -496,6 +537,9 @@ function filter_by_idols(){
 		//キーワードが設定されていて、リストになかったらスキップ
 		if (keywords != '' && story.keywords.indexOf(keywords) < 0 ) continue;
 
+		//☆がチェックされていて、favsリストになかったらスキップ
+		if (document.getElementById('fav_only').checked && !favs.has(story.id)) continue;
+
 		//「主役のみ」がチェックされていたら、アイドル１で主役判定。アイドル２はゲスト回も表示
 		if (document.getElementById("main_only").checked){
 			if (all_idols.indexOf(idol1) == 0 || idol1 == '') stories.push(story);
@@ -524,6 +568,16 @@ function get_participated_idols_text(idols, class_str=""){
 		}
 	}
 	return text;
+}
+function starr_click(elem, id){
+	if (elem.classList.contains('unstarr')){
+		elem.classList.remove('unstarr');
+		favs.add(id)
+	} else {
+		elem.classList.add('unstarr');
+		favs.delete(id)
+	}
+	console.log('favs: ', Array.from(favs.values()))
 }
 
 function update_tweets(stories){
@@ -556,7 +610,7 @@ function update_tweets(stories){
 
         html += `
         <div class="story">
-			<div style="border:0px solid #92cfbb; box-shadow: 4px 4px 4px gray; border-radius:6px; padding:3px;">
+			<div style="border:0px solid #92cfbb; box-shadow: 4px 4px 4px gray; border-radius:6px; padding:3px; position:relative;">
 				<p
 					class="story_title"
 					title="タイトル：${stories[i].title}
@@ -566,8 +620,12 @@ function update_tweets(stories){
 シリーズ：${stories[i].series[0]}
 作画：${stories[i].drawers[0]}"
 				>
-					${html_inline_voice_link}No.${stories[i].number} <span style="font-size:1.3em; font-weight: bold;"><a target="_blank" href="${stories[i].url}" title="${stories[i].title}">${stories[i].title}</a></span><br>
+					${html_inline_voice_link}#${stories[i].number}
+					<span style="font-size:1.3em; font-weight: bold;">
+						<a target="_blank" href="${stories[i].url}" title="${stories[i].title}">${stories[i].title}</a>
+					</span><br>
 					<span>${get_participated_idols_text(stories[i].idols)}${get_participated_idols_text(stories[i].referreds, "referred")}</span>
+					<span class="${favs.has(stories[i].id) ? '' : 'unstarr'} clickable" style="position:absolute; right: 0px;top:0px;" onclick="starr_click(this, '${stories[i].id}')">⭐</span>
 				</p>
 				${html_inline_picture}
 				<blockquote class="twitter-tweet">

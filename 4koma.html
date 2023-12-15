@@ -144,6 +144,20 @@ iframe, .twitter-tweet  {
 img.referred {
 	filter: opacity(0.4);
 }
+.unstarr {
+	filter: grayscale(100%) contrast(50%) brightness(150%);
+}
+.clickable {
+	cursor: pointer;
+}
+.clickable:hover {
+	font-size: 110%;
+}
+
+.form-check .form-check-input {
+	margin-left: -1.0rem;
+	//padding-right: 10px;
+}
     </style>
 </head>
 
@@ -174,6 +188,9 @@ img.referred {
             </select>
 			-->
 			<ul class="dropdown_nav">
+				<div  class="dropdown_container" style="font-size:medium;" title="お気に入り">
+					<div class="form-check"><input class="form-check-input" type="checkbox" id="fav_only" value="">⭐ </div>
+				</div>
 				<div  class="dropdown_container" style="font-size:medium;" title="主役回のみ表示">
 					<div class="form-check"><input class="form-check-input" type="checkbox" id="main_only" value="">♛</div>
 					<!--<input type="checkbox" id="main_only" value="" style="display:inline-block"><br>主役回　　-->
