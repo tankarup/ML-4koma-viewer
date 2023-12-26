@@ -124,7 +124,12 @@ function getJsonp_GAS() {
 
 				//idとして、Twitter画像の文字列を使用する
 				const match = story['img'].match(/media\/([^\?/]+)/);
-				const id = match[1];
+				let id;
+				if (match) {
+					id = match[1];
+				} else {
+					id = story['URL'];
+				}
 
 				let new_item = {
 					title: story['タイトル'],
@@ -605,7 +610,26 @@ function update_tweets(stories){
 
     for (var i = viewing_koma; i < viewing_koma + number_per_page; i++) {
         if (i > stories.length -1) break;
-		const html_inline_picture = `<p><img alt="${stories[i].title}" src="${stories[i].img}" style="width:100%; ${show_whole_picture ? '' : 'height:300px; object-fit:cover; object-position:0% 0%;'}"></p>`;
+
+		//画像表示部分
+		let html_inline_picture = '';
+		if (stories[i].img.indexOf('https://pbs.twimg.com/media/') == 0){ //Twitter画像だったらインライン表示
+			html_inline_picture = `<p><img alt="${stories[i].title}" src="${stories[i].img}" style="width:100%; ${show_whole_picture ? '' : 'height:300px; object-fit:cover; object-position:0% 0%;'}"></p>`;
+		} else {//それ以外だったらそのまま表示
+			html_inline_picture = stories[i].img;
+		}
+
+		//元画像の権利者表記部分
+		let html_quote = '';
+		if (stories[i].url.indexOf('https://twitter.com/') == 0){ //TwitterへのリンクだったらTwitterの引用機能を使う
+			html_quote = `
+				<blockquote class="twitter-tweet">
+					<a href="${stories[i].url}">#ミリシタ4コマ 公式ツイート</a>
+				</blockquote>`;
+		} else { //それ以外はテキストリンク
+			html_quote = `<a href="${stories[i].url}">${stories[i].url}</a>`
+		}
+
 		const html_inline_voice_link = stories[i].voice_url ? `<a href="${stories[i].voice_url}" target="_blank">🎤</a>` : '';
 
         html += `
@@ -628,9 +652,7 @@ function update_tweets(stories){
 					<span class="${favs.has(stories[i].id) ? '' : 'unstarr'} clickable" style="position:absolute; right: 0px;top:0px;" onclick="starr_click(this, '${stories[i].id}')">⭐</span>
 				</p>
 				${html_inline_picture}
-				<blockquote class="twitter-tweet">
-					<a href="${stories[i].url}">#ミリシタ4コマ 公式ツイート</a>
-				</blockquote>
+				${html_quote}
 			</div>
         </div>`;
 
