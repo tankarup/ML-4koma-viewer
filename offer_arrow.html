@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>4コマに見る三角関係</title>
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet">
+    <style type="text/css">
+      #network {
+        width:  1600px;
+        height: 1000px;
+        border: 1px solid #000;
+      }
+    </style>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+</head>
+<body>
+	<h1>4コマに見る三角関係</h1>
+
+	<ul>
+		<li>ミリシタ4コマに登場するアイドルを集計し、好意の向きを可視化しました。</li>
+		<li>4コマには主役が設定されています。主役以外で登場するアイドル(脇役アイドル)は、主役アイドルのことが好きで一緒に行動していたので4コマに登場したと考え、好意の向きと大きさを矢印で表現しました。</li>
+		<li>例えば、春香が桃子の主役回に3回、千早の主役回に2回登場していた場合、登場回数が最も多い桃子のことが好きだと判定し、太さが3の矢印を春香⇒桃子に引きました。2位以下の千早には矢印を引きません。登場回数が1回以下の場合は、1位でも矢印を引きません。</li>
+	</ul>
+	<div id="network"></div>
+<script>
+const yonkoma = `貴音	春香
+春香	千早
+律子	美希
+やよい	雪歩
+亜美	やよい
+伊織	真
+響	伊織
+千早	貴音
+あずさ	律子
+雪歩	あずさ
+真美	亜美
+真	真美
+美希	響
+エミリー	未来
+志保	静香
+歌織	翼
+百合子	琴葉
+星梨花	エレナ
+奈緒	美奈子
+ジュリア	恵美
+育	まつり
+茜	星梨花
+美也	茜
+風花	杏奈
+桃子	ロコ
+未来	百合子
+のり子	紗代子
+可奈	亜利沙
+琴葉	海美
+紗代子	育
+千鶴	朋花
+まつり	エミリー
+朋花	志保
+昴	歩
+エレナ	ひなた
+美奈子	可奈
+亜利沙	奈緒
+ロコ	千鶴
+翼	このみ
+杏奈	環
+環	風花
+ひなた	美也
+海美	のり子
+莉緒	瑞希
+このみ	可憐
+恵美	莉緒
+紬	昴
+可憐	麗花
+瑞希	桃子
+歩	ジュリア
+静香	紬
+麗花	歌織`;
+const idols_text = `美希	miki	#FFBE0E
+やよい	yayoi	#FFBE0E
+あずさ	azusa	#FFBE0E
+亜美	ami	#FFBE0E
+真美	mami	#FFBE0E
+翼	tsubasa	#FFBE0E
+エレナ	elena	#FFBE0E
+星梨花	serika	#FFBE0E
+茜	akane	#FFBE0E
+杏奈	anna	#FFBE0E
+ひなた	hinata	#FFBE0E
+このみ	konomi	#FFBE0E
+環	tamaki	#FFBE0E
+風花	fuka	#FFBE0E
+美也	miya	#FFBE0E
+可憐	karen	#FFBE0E
+麗花	reika	#FFBE0E
+歌織	kaori	#FFBE0E
+千早	chihaya	#005EFF
+伊織	iori	#005EFF
+貴音	takane	#005EFF
+律子	ritsuko	#005EFF
+静香	shizuka	#005EFF
+恵美	megumi	#005EFF
+ロコ	roco	#005EFF
+朋花	tomoka	#005EFF
+志保	shiho	#005EFF
+歩	ayumu	#005EFF
+千鶴	chizuru	#005EFF
+瑞希	mizuki	#005EFF
+莉緒	rio	#005EFF
+昴	subaru	#005EFF
+桃子	momoko	#005EFF
+ジュリア	julia	#005EFF
+紬	tsumugi	#005EFF
+春香	haruka	#FF2E8A
+雪歩	yukiho	#FF2E8A
+真	makoto	#FF2E8A
+響	hibiki	#FF2E8A
+未来	mirai	#FF2E8A
+琴葉	kotoha	#FF2E8A
+美奈子	minako	#FF2E8A
+まつり	matsuri	#FF2E8A
+百合子	yuriko	#FF2E8A
+紗代子	sayoko	#FF2E8A
+亜利沙	arisa	#FF2E8A
+海美	umi	#FF2E8A
+育	iku	#FF2E8A
+エミリー	emily	#FF2E8A
+可奈	kana	#FF2E8A
+奈緒	nao	#FF2E8A
+のり子	noriko	#FF2E8A`;
+
+//
+/*
+datas = [
+	[春香, 千早, 美希],//春香が主役の回に千早と美希が参加
+	[ジュリア, 紬],
+]
+*/
+let datas = [];
+const lines = yonkoma.split('\n');
+for (let line of lines){
+	if (line.length < 1) continue;
+	datas.push(line.split('\t'));
+}
+
+/* 自分が主役の回に参加してくれた人数
+liked = {
+	春香:2, 
+	千早:3,
+
+}
+*/
+let liked = {};
+for (let data of datas){
+	const count_submembers = data.filter(item => item.length > 0).length - 1;
+	liked[data[0]] = liked[data[0]] ? liked[data[0]] + count_submembers : count_submembers;
+}
+console.log(liked);
+
+//アイドル一覧
+let idols = []; //[春香, 千早, 美希, ...]
+let idol_attr = {}; //{春香: {icon: icons/haruka.jpg ,color: #aaaaaa}}
+
+let idol_lines = idols_text.split('\n');
+for (let line of idol_lines){
+	const items = line.split('\t');
+	idols.push(items[0]);
+	idol_attr[items[0]] = {
+		icon: `icons/${items[1]}.jpg`,
+		color: items[2],
+	}
+}
+
+//脇役として参加した回の主役名をカウント
+/*
+likes = {
+	春香:{千早:2, 美希:2,...}, //春香は千早の主役回に2回参加した
+	千早:{春香: 3, 美希:2, ...},
+}
+*/
+let likes = {};
+//変数の初期化
+for (let idol of idols){
+	likes[idol] = {};
+	for (let idol2 of idols){
+		likes[idol][idol2] = 0;
+	}
+}
+
+for (let data of datas){
+	for (let i = 1; i < data.length; i++){
+		if (likes[data[i]]){
+			likes[data[i]][data[0]] += 1;
+		}
+
+	}
+}
+console.log(likes);
+
+//Vis用データを作る
+/*
+[
+        {from: 1, to: 2, arrows: 'to'},
+        {from: 1, to: 3, arrows: 'to'},
+        {from: 3, to: 4, arrows: 'to'},
+        {from: 6, to: 1, arrows: 'to'},
+        {from: 7, to: 8, arrows: 'to'},
+        {from: 8, to: 7, arrows: 'to'},
+      ]
+*/
+let edges = new vis.DataSet();
+for (let idol_from in likes){
+	const like = likes[idol_from];
+	let max_like = 1; //2回以下のライクは無視
+	let loved_idols = [];
+	for (let idol_to of idols){
+		if (like[idol_to] == max_like){
+			loved_idols.push(idol_to);
+		}
+		if (like[idol_to] > max_like){
+			loved_idols = [idol_to];
+			max_like = like[idol_to];
+		}
+	}
+	for (let idol_to of idols){
+		
+		if (like[idol_to] == max_like){
+			const loved_idol = idol_to;
+
+			edges.add({
+				from: idol_from,
+				to: loved_idol,
+				arrows: 'to',
+				value: 1,//like[idol_to],
+				title: idol_from + '♡'.repeat(like[idol_to]) + loved_idol + ' (DBClick to open 4koma)',
+				color: {
+					color: idol_attr[idol_from].color,
+					highlight: idol_attr[idol_from].color,
+				},
+				label: '♡'.repeat(like[idol_to]),
+				font: {
+					size: 0,
+				},
+				scaling: {
+					label: false,
+				},
+				chosen:{
+					label: function(values, id, selected, hovering) {
+						values.size = 20;
+						values.color = idol_attr[idol_from].color;
+					},
+					edge:   function(values, id, selected, hovering) {
+						values.color = idol_attr[idol_from].color;
+					},
+				},
+
+			});
+		}
+
+	}
+	
+}
+console.log(edges);
+
+/*
+[
+        {id: 1, label: 'A'},
+        {id: 2, label: 'B'},
+        {id: 3, label: 'C'},
+        {id: 4, label: 'D'},
+        {id: 5, label: 'E'},
+        {id: 6, label: 'F'},
+        {id: 7, label: 'G'},
+        {id: 8, label: 'H'},
+      ]
+*/
+let nodes = new vis.DataSet();
+for (let idol of idols){
+	nodes.add({
+		id: idol,
+		//label: idol,
+		font: {size: 25},
+		shape: 'circularImage',
+		image: idol_attr[idol].icon,
+		size: 50,
+		color: idol_attr[idol].color,
+		borderWidth: 5,
+		value: liked[idol],
+		scaling: {
+			max: 40,
+			min: 15,
+		},
+		title: idol + ' (DBClick to open 4koma)',
+
+	});
+}
+console.log(nodes);
+
+const interaction = {
+	hover: true,
+};
+
+var container = document.getElementById('network');
+var data = {
+nodes: nodes,
+edges: edges,
+
+};
+var options = {
+	interaction: interaction,
+};
+var network = new vis.Network(container, data, options);
+network.on('doubleClick', function(params){
+	console.log(params);
+	//ノードが選択されていた場合
+	if (params.nodes.length > 0){
+		//選択されているアイドルの主役回を表示
+		window.open(`https://tankarup.github.io/ML-4koma-viewer/4koma.html?idol1=${params.nodes[0]}&main=true`, '_blank');
+		return;
+	}
+	if (params.edges.length > 0){
+		const edge_id = params.edges[0];
+		const edge = edges.get(edge_id);
+		console.log(edge);
+		window.open(`https://tankarup.github.io/ML-4koma-viewer/4koma.html?idol1=${edge.to}&main=true&idol2=${edge.from}`, '_blank');
+		return;
+
+	}
+
+});
+
+
+</script>
+</body>
+</html>

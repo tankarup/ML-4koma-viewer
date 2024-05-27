@@ -621,7 +621,7 @@ function update_tweets(stories){
 
 		//元画像の権利者表記部分
 		let html_quote = '';
-		if (stories[i].url.indexOf('https://twitter.com/') == 0){ //TwitterへのリンクだったらTwitterの引用機能を使う
+		if (stories[i].url.indexOf('https://twitter.com/') == 0 || stories[i].url.indexOf('https://x.com/') == 0){ //TwitterへのリンクだったらTwitterの引用機能を使う
 			html_quote = `
 				<blockquote class="twitter-tweet">
 					<a href="${stories[i].url}">#ミリシタ4コマ 公式ツイート</a>
