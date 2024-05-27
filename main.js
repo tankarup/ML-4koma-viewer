@@ -621,13 +621,17 @@ function update_tweets(stories){
 
 		//元画像の権利者表記部分
 		let html_quote = '';
-		if (stories[i].url.indexOf('https://twitter.com/') == 0 || stories[i].url.indexOf('https://x.com/') == 0){ //TwitterへのリンクだったらTwitterの引用機能を使う
+		let url_quote = stories[i].url;
+		//urlがx.comの場合も、引用機能はtwitter.comを使っているので、置き換える
+		url_quote = url_quote.replace('https://x.com/','https://twitter.com/');
+
+		if (url_quote.indexOf('https://twitter.com/') == 0){ //TwitterへのリンクだったらTwitterの引用機能を使う
 			html_quote = `
 				<blockquote class="twitter-tweet">
-					<a href="${stories[i].url}">#ミリシタ4コマ 公式ツイート</a>
+					<a href="${url_quote}">#ミリシタ4コマ 公式ツイート</a>
 				</blockquote>`;
 		} else { //それ以外はテキストリンク
-			html_quote = `<a href="${stories[i].url}">${stories[i].url}</a>`
+			html_quote = `<a href="${url_quote}">${url_quote}</a>`
 		}
 
 		const html_inline_voice_link = stories[i].voice_url ? `<a href="${stories[i].voice_url}" target="_blank">🎤</a>` : '';
