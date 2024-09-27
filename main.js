@@ -100,16 +100,18 @@ function getJsonp_GAS() {
             for (let i = 0; i < json.length; i++){
                 const story = json[i];
                 if (story['タイトル'].length < 1) continue;
-                let idol = [];
+                let idol = [], main_idols = [], sub_idols = [];
 				//主役アイドルを追加
-				const main_idol = story['登場人物1'];
-				idol[0] = main_idol;
+				main_idols = story['登場人物1'].split(/\s*[,、]\s*/);//カンマ区切りで複数のアイドルに分割し、名前の前後に入っている空白は削除する
+				idol = idol.concat(main_idols);
 
 				//脇役アイドルを追加
                 for (let j=1; j<8; j++){
                     const key = '登場人物' + (j+1);
-					idol = idol.concat(story[key].split(/\s*[,、]\s*/));//カンマ区切りで複数のアイドルに分割し、名前の前後に入っている空白は削除する
+					sub_idols = sub_idols.concat(story[key].split(/\s*[,、]\s*/));//カンマ区切りで複数のアイドルに分割し、名前の前後に入っている空白は削除する
                 }
+				idol = idol.concat(sub_idols);
+
 				//ちょい役アイドルを追加
 				const referreds = story['言及'].split(/\s*[,、]\s*/);//カンマ区切りで複数のアイドルに分割し、名前の前後に入っている空白は削除する
 
@@ -134,6 +136,8 @@ function getJsonp_GAS() {
 				let new_item = {
 					title: story['タイトル'],
 					idols: idol,
+					main_idols,
+					sub_idols,
 					referreds: referreds,
 					drawers: [story['作画']], //idolsと処理を同じにするために配列として保持。
 					series:[story['シリーズ']], //idolsと処理を同じにするために配列として保持。
@@ -475,6 +479,7 @@ function goPrev(){
 	update_tweets(current_list);
 }
 function goNext(){
+	
 	viewing_koma = viewing_koma + number_per_page;
 
 	//最後尾に移動したときに、画面いっぱいに4コマを表示する
@@ -530,6 +535,8 @@ function filter_by_idols(){
     let stories = [];
 	for (let story of data){
 		const all_idols = story.idols.concat(story.referreds);
+		//アイドル1が設定されていて、登場リストになかったらスキップ
+		if (idol1 != '' && all_idols.indexOf(idol1) < 0 ) continue;
 		//アイドル2が設定されていて、登場リストになかったらスキップ
 		if (idol2 != '' && all_idols.indexOf(idol2) < 0 ) continue;
 
@@ -545,12 +552,11 @@ function filter_by_idols(){
 		//☆がチェックされていて、favsリストになかったらスキップ
 		if (document.getElementById('fav_only').checked && !favs.has(story.id)) continue;
 
-		//「主役のみ」がチェックされていたら、アイドル１で主役判定。アイドル２はゲスト回も表示
+		//「主役のみ」がチェックされていたら、アイドル１で主役判定。
 		if (document.getElementById("main_only").checked){
-			if (all_idols.indexOf(idol1) == 0 || idol1 == '') stories.push(story);
-		} else {
-			if (all_idols.indexOf(idol1) >= 0 || idol1 == '') stories.push(story);
-		}
+			if (story.main_idols.indexOf(idol1) < 0) continue;
+		} 
+		stories.push(story);
 	}
 
     return stories;
@@ -589,18 +595,18 @@ function update_tweets(stories){
     const init = page*number_per_page;
 
     if (viewing_koma < 1){
-        $('#prev_button').prop('disabled', true);
-        $('#first_button').prop('disabled', true);
+        $('.prev_button').prop('disabled', true);
+        $('.first_button').prop('disabled', true);
     } else {
-        $('#prev_button').prop('disabled', false);
-        $('#first_button').prop('disabled', false);
+        $('.prev_button').prop('disabled', false);
+        $('.first_button').prop('disabled', false);
     }
     if (viewing_koma > stories.length-number_per_page-1){
-        $('#next_button').prop('disabled', true);
-        $('#last_button').prop('disabled', true);
+        $('.next_button').prop('disabled', true);
+        $('.last_button').prop('disabled', true);
     } else {
-        $('#next_button').prop('disabled', false);
-        $('#last_button').prop('disabled', false);
+        $('.next_button').prop('disabled', false);
+        $('.last_button').prop('disabled', false);
     }
     $('.pages').text(`${viewing_koma+1}-${Math.min(viewing_koma+number_per_page, stories.length)}/${stories.length}`);
 
